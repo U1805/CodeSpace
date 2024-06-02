@@ -1,26 +1,11 @@
-@import url('https://fonts.googleapis.com/css?family=Nunito:400,600,700,800,900');
 @import './base.css';
 
-@font-face {
-    font-family: 'Blueaka';
-    src: url('../fonts/Blueaka.woff2');
-}
-
-@font-face {
-    font-family: 'Blueaka-kr-light';
-    src: url('../fonts/Gyeonggi_Title_Light.woff');
-    unicode-range: U+AC00-D7A3; /* Korean unicode range */
-}
-
-@font-face {
-    font-family: 'Blueaka-kr-medium';
-    src: url('../fonts/Gyeonggi_Title_Medium.woff');
-    unicode-range: U+AC00-D7A3; /* Korean unicode range */
-}
-
 #app {
-    width: var(--view-width);
-    height: var(--view-height);
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 0 auto;
     font-weight: normal;
 }
