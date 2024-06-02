@@ -1,9 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '@/components/Home.vue';
-import Chat from '@/components/Chat.vue'
-
-import Login from '@/components/Login.vue';
-import Register from '@/components/Register.vue';
+import Home from '@/view/HomeView.vue';
+import Chat from '@/view/ChatView.vue'
+import Login from '@/view/LoginView.vue';
+import Register from '@/view/RegisterView.vue';
 
 
 const router = createRouter({
