@@ -1,85 +1,72 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import MomoIcon from './components/icons/IconMomo.vue'
+import SettingIcon from './components/icons/IconSetting.vue'
+import StudentIcon from './components/icons/IconStudent.vue'
+import MessageIcon from './components/icons/IconMessage.vue'
+import DownloadIcon from './components/icons/IconDownload.vue'
+import ListIcon from './components/icons/IconList.vue'
+import ResetIcon from './components/icons/IconReset.vue'
+import LanguageIcon from './components/icons/IconLanguage.vue'
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    <PlayerDialog></PlayerDialog>
+    <SettingDialog></SettingDialog>
+    <div id="root">
+        <div id="header">
+            <div id="header__left">
+                <MomoIcon class="icon momo" />
+                <span id="header__title">MomoTalk</span>
+                <RouterLink to="/help" title="Help">
+                    <button class="help">?</button>
+                </RouterLink>
+            </div>
+            <div id="header__right">
+                <SettingIcon class="icon setting" />
+            </div>
+        </div>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+        <div id="sidebar">
+            <div id="sidebar__up">
+                <RouterLink to="/" title="Info">
+                    <StudentIcon class="icon info" />
+                </RouterLink>
+                <RouterLink to="/chat" title="Chat">
+                    <MessageIcon class="icon message" />
+                </RouterLink>
+            </div>
+            <div id="sidebar__down">
+                <div style="cursor: pointer" title="Reset">
+                    <ResetIcon class="icon reset" />
+                </div>
+                <div style="cursor: pointer" title="Download">
+                    <DownloadIcon class="icon download" />
+                </div>
+                <div style="cursor: pointer" title="Switch Language">
+                    <LanguageIcon class="icon language" />
+                </div>
+            </div>
+        </div>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+        <div id="listcard">
+            <div id="listcard__header">
+                <div class="search-group">
+                    <input type="text" placeholder="Type / to search" class="search-group__text" id="searchBox" />
+                </div>
+                <div class="student-list__button" title="Switch Student List">
+                    <ListIcon class="icon list" />
+                </div>
+            </div>
+            <div id="listbody">
+                <div class="list-item" v-for="i in [1,2,3]" :key="i">list {{ i }}
+                </div>
+            </div>
+        </div>
+        <RouterView id="chatcard" />
     </div>
-  </header>
-
-  <RouterView />
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
+<style scoped lang="scss">
+@import './app.scss';
+@import '@/assets/css/icons.scss';
 </style>
