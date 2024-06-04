@@ -1,10 +1,3 @@
 <template>
-    <RouterView/>
+  <RouterView id="root"/>
 </template>
-
-<style scoped>
-* {
-    padding: 0;
-    margin: 0;
-}
-</style>

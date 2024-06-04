@@ -11,7 +11,11 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "@guolao/vue-monaco-editor": "^1.5.1",
+    "element-plus": "^2.7.4",
     "vue": "^3.4.21",
+    "vue-code-layout": "^1.0.3",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {

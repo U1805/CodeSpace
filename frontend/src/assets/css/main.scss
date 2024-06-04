@@ -2,7 +2,7 @@
 
 #app {
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh - 3px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -17,25 +17,35 @@ a,
     transition: 0.4s;
 }
 
-body {
-    background-image: url($background);
-    backdrop-filter: blur(5px) brightness(60%);
-    background-size: cover;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
 img {
     -webkit-user-drag: none;
 }
 
-@media screen and (max-width: 1150px) {
-    #app {
-        width: 100vw;
-    }
-    body {
-        display: block;
-    }
+body {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #c4c3ca;
+    background-color: #1f2029;
+    overflow-x: hidden
+}
+
+:root {
+    --code-layout-titlebar-background: #2e2f3b;
+    --code-layout-color-background-light: #33343d;
+    --code-layout-color-background: #1f2029;
+    --code-layout-color-background-second: #11121b;
+    --code-layout-color-border-background: #4d4f5c;
+    --code-layout-color-text-light: #fff9;
+    --code-layout-color-background-second: #242633;
+
+}
+
+.monaco-editor, .monaco-editor-background {
+    --vscode-editor-background: #191a22;
+}
+
+.monaco-editor .margin{
+    --vscode-editorGutter-background: #13141a;
 }

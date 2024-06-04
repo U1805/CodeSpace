@@ -22,5 +22,5 @@ export default defineConfig({
         additionalData: '@import "@/assets/css/mixin.scss";'
       }
     },
-  }
+  },
 })
