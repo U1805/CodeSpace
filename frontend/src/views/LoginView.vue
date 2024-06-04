@@ -15,7 +15,7 @@
                                             <h4 class="mb-4 pb-3">Log In</h4>
                                             <div class="form-group"><input type="text" name="logname" class="form-style"
                                                     placeholder="Your User Name" id="logname" v-model="username"
-                                                    autocomplete="off"><i class="input-icon uil uil-user"></i></div>
+                                                    autocomplete="off"><i class="input-icon uil uil-loginInfo"></i></div>
                                             <div class="form-group mt-2"><input type="password" name="logpass"
                                                     class="form-style" placeholder="Your Password" id="logpass"
                                                     v-model="password" autocomplete="off"><i
@@ -32,7 +32,7 @@
                                             <h4 class="mb-4 pb-3">Sign Up</h4>
                                             <div class="form-group"><input type="text" name="logname" class="form-style"
                                                     placeholder="Your Full Name" id="logname" v-model="username"
-                                                    autocomplete="off"><i class="input-icon uil uil-user"></i></div>
+                                                    autocomplete="off"><i class="input-icon uil uil-loginInfo"></i></div>
                                             <div class="form-group mt-2"><input type="password" name="logpass"
                                                     class="form-style" placeholder="Your Password" id="logpass"
                                                     v-model="password" autocomplete="off"><i

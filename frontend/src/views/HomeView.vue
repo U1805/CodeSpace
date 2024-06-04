@@ -2,8 +2,8 @@
     <CodeLayout ref="codeLayout" :layout-config="config" :main-menu-config="menuData">
         <template #panelRender="{ panel }">
             <UserInfo
-                v-if="panel.name == 'user' && setTitle('用户中心')"
-                :user-data="userData"
+                v-if="panel.name == 'loginInfo' && setTitle('用户中心')"
+                :loginInfo-data="userData"
                 style="height: 100%"
             >
             </UserInfo>

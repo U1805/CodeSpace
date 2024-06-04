@@ -13,7 +13,7 @@
 
 ### Recommended IDE Setup
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+[VSCode](https://code.visualstudio.com/) + Vue-Official插件.
 
 ### Project Setup
 
@@ -31,7 +31,7 @@ npm run dev
 
 - Controller：规定接口 API 的参数形式与返回
 - Server：中间逻辑处理，一般分为 Interface 和 Implement 两部分，便于不同实现的复用
-- Mapper：处理数据库，基本以 SQL 形式
+- Mapper：处理数据库，基本以 SQL 形式，掌握 [Mybatis](https://www.bilibili.com/video/BV1MT4y1k7wZ/)
 
 ---
 
@@ -42,6 +42,9 @@ npm run dev
 
 
 后端数据库使用 MySQL，账号密码 root/123456，数据库名为 codespace
+
+`@RequestBody LoginInfo loginInfo` -> LoginInfo 在 `pojo` 中定义实体类  
+`@PathParam("username") String username`
 
 ### Recommended IDE Setup
 
