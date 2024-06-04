@@ -2,30 +2,31 @@
     <CodeLayout ref="codeLayout" :layout-config="config" :main-menu-config="menuData">
         <template #panelRender="{ panel }">
             <UserInfo
-                v-if="panel.name == 'loginInfo' && setTitle('用户中心')"
-                :loginInfo-data="userData"
+                v-if="panel.name == 'user' && setTitle('用户中心')"
+                :user-data="userData"
                 style="height: 100%"
             >
             </UserInfo>
             <div v-else-if="panel.name == 'explorer.search' && setTitle('算法库')">
                 <el-input
-                    v-model="search"
+                    v-model="keyword"
                     style="padding: 20px"
                     placeholder="搜索"
+                    @change="search(keyword, '')"
                     :prefix-icon="Search"
                 />
             </div>
             <div v-else-if="panel.name == 'explorer.algorithms' && setTitle('算法库')">
-                <div v-for="repo in tableData" class="repo" @click="openFile(repo)">
+                <div v-for="repo in algoData" class="repo" @click="openFile(repo)">
                     <el-icon :size="15"><Collection /></el-icon>
-                    <span style="font-size: 15px; margin-left: 5px">{{ repo['name'] }}</span>
+                    <span style="font-size: 15px; margin-left: 5px">{{ repo['title'] }}</span>
                 </div>
             </div>
             <div v-else-if="panel.name == 'explorer.info' && setTitle('算法库')" class="algo_info">
                 <div v-if="currentSelectd">
                     <el-row
                         ><el-col :span="4">算法名称</el-col
-                        ><el-col :span="20">{{ currentSelectd['name'] }}</el-col></el-row
+                        ><el-col :span="20">{{ currentSelectd['title'] }}</el-col></el-row
                     >
                     <el-row
                         ><el-col :span="4">算法作者</el-col
@@ -81,7 +82,7 @@
 
 <script setup lang="ts">
 import { loadLayout, config, menuData } from '@/assets/layout'
-import { ref, onMounted, nextTick, h, VueElement, DefineComponent, reactive, watch } from 'vue'
+import { ref, onMounted, nextTick, h } from 'vue'
 import {
     CodeLayout,
     SplitLayout,
@@ -90,7 +91,7 @@ import {
     CodeLayoutInstance,
     CodeLayoutPanelInternal
 } from 'vue-code-layout'
-import { Calendar, Search } from '@element-plus/icons-vue'
+import { Search } from '@element-plus/icons-vue'
 import UserInfo from '../components/UserInfo.vue'
 import UploadView from '../components/UploadView.vue'
 
@@ -114,9 +115,12 @@ function loadInnerLayout() {
     }
 }
 onMounted(() => {
-    nextTick(() => {
+    nextTick(async () => {
         groups.value = loadLayout(codeLayout.value)
-        // groups.value[1].activeSelf()
+        const username = localStorage.getItem('userToken')
+        userData.value = await getUser(username)
+        setBadge(userData.value.repo.toString())
+        algoData.value = await search(username, '')
     })
 })
 // =====初始化布局结束======
@@ -137,10 +141,12 @@ const setTitle = (new_title: string) => {
 }
 
 import IconMarkdown from '../components/icons/IconMarkdown.vue'
+import { Algo, User } from '../assets/interface'
+import { getUser, search } from '@/assets/request'
 const file_opened = ref(0)
 const openFile = (repo) => {
     split.value.addPanel({
-        title: repo['name'],
+        title: repo['title'],
         name: 'file' + file_opened.value,
         iconSmall: () => h(IconMarkdown),
         data: { value: repo['content'], language: repo['language'], repo: repo },
@@ -156,55 +162,10 @@ function onPanelClose(panel: CodeLayoutPanelInternal, resolve: () => void) {
     }
 }
 
-const userData = ref({
-    userName: 'Lee Ji Eun',
-    userEmail: '123@email.com',
-    userAvatar: 'https://img.moegirl.org.cn/common/7/7a/Name_kaho_icon_v2.png',
-    userInfo: {
-        repo: 190,
-        score: 240,
-        line: '7.3k'
-    }
-})
-
-const search = ref<string>()
+const userData = ref<User>()
+const keyword = ref<string>()
 const currentSelectd = ref()
-
-const tableData = [
-    {
-        author: '2016-05-03',
-        name: 'Tom',
-        language: 'javascript',
-        desc: '',
-        tags: ['javascript', 'bb', 'cc'],
-        content:
-            'No. 189, Grove St, Los Angeles\nrove St, Los Angeles\nrove St, Los Angeles\nrove St, Los Angeles'
-    },
-    {
-        author: '2016-05-02',
-        name: 'Tom',
-        language: 'python',
-        desc: 'Tom',
-        tags: ['python', 'bb', 'cc'],
-        content: 'No. 189, Grove St, Los Angeles'
-    },
-    {
-        author: '2016-05-04',
-        name: 'Tom',
-        language: 'c',
-        desc: '6-05-0',
-        tags: ['c', 'bb', 'cc'],
-        content: 'No. 189, Grove St, Los Angeles'
-    },
-    {
-        author: '2016-05-01',
-        name: 'Tom',
-        language: 'cpp',
-        desc: '',
-        tags: ['cpp', 'bb', 'cc'],
-        content: 'No. 189, Grove St, Los Angeles'
-    }
-]
+const algoData = ref<Algo[]>()
 </script>
 
 <style lang="scss">

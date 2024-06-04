@@ -36,7 +36,7 @@
             </el-form-item>
             <el-form-item label="算法库名">
                 <el-input
-                    v-model="form.repoName"
+                    v-model="form.title"
                     placeholder="填写该算法库的名称"
                     maxlength="20"
                     show-word-limit
@@ -64,7 +64,7 @@
             </el-form-item>
             <el-form-item label="算法简介">
                 <el-input
-                    v-model="form.intro"
+                    v-model="form.desc"
                     placeholder="填写更全面的相关信息"
                     maxlength="500"
                     show-word-limit
@@ -77,12 +77,11 @@
                 {{ form.line }}
             </el-form-item>
             <el-form-item label="实现语言">
-                {{ form.lang }}
+                {{ form.language }}
             </el-form-item>
 
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">Create</el-button>
-                <el-button>Cancel</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -113,15 +112,15 @@ const allow_type = [
 ]
 
 const handleFileUpload = (file, upload_files) => {
-    form.files = []
+    form.content = ""
     form.line = 0
     upload_files.forEach((file) => {
         const ext = file.raw.name.split('.')[file.raw.name.split('.').length-1]
         if (allow_type.findIndex(ele => ele == ext) != -1){
+            form.language = ext
             countTextFile(file.raw, ext)
         }
     })
-    console.log(form.files)
 }
 
 const countTextFile = (file, ext) => {
@@ -132,23 +131,21 @@ const countTextFile = (file, ext) => {
         const wordCount = content.split(/\s+/).length
         const charCount = content.length
         const lineCount = content.split(/\n/).length
-        form.files.push({
-            name: file.name,
-            content: content,
-            language: ext
-        })
-        form.line += lineCount
+        form.content =content,
+        form.line = lineCount
     }
     reader.readAsText(file)
 }
 
+const username = localStorage.getItem("userToken")
 const form = reactive({
-    repoName: '',
-    files: [],
+    title: '',
+    content: '',
+    author: username,
     tags: [],
-    intro: '',
+    desc: '',
     line: 0,
-    lang: '无'
+    language: '无'
 })
 
 const onSubmit = () => {

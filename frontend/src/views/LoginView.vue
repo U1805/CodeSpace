@@ -15,14 +15,18 @@
                                             <h4 class="mb-4 pb-3">Log In</h4>
                                             <div class="form-group"><input type="text" name="logname" class="form-style"
                                                     placeholder="Your User Name" id="logname" v-model="username"
-                                                    autocomplete="off"><i class="input-icon uil uil-loginInfo"></i></div>
+                                                    autocomplete="off"><i class="input-icon uil uil-user"></i></div>
                                             <div class="form-group mt-2"><input type="password" name="logpass"
                                                     class="form-style" placeholder="Your Password" id="logpass"
                                                     v-model="password" autocomplete="off"><i
                                                     class="input-icon uil uil-lock-alt"></i></div>
-                                            <a href="/" class="btn mt-4" >submit</a>
-                                            <p class="mb-0 mt-4 text-center"><a href="#0" class="link">Forgot your
-                                                    password?</a></p>
+                                            <div class="form-group mt-2">
+                                                <input class="checkbox2" type="checkbox" id="admin" name="admin" :checked="admin"/>
+                                                <label for="admin" style="margin-top: 24px;"></label>
+                                                <span>Log in as an Administrator</span>
+                                            </div>
+                                            <a href="/" class="btn mt-4" @click="login(username, password, admin)">Log in</a>
+                                            <p class="mb-0 mt-4 text-center"><a href="#0" class="link">Forgot your password?</a></p>
                                         </div>
                                     </div>
                                 </div>
@@ -32,12 +36,12 @@
                                             <h4 class="mb-4 pb-3">Sign Up</h4>
                                             <div class="form-group"><input type="text" name="logname" class="form-style"
                                                     placeholder="Your Full Name" id="logname" v-model="username"
-                                                    autocomplete="off"><i class="input-icon uil uil-loginInfo"></i></div>
+                                                    autocomplete="off"><i class="input-icon uil uil-user"></i></div>
                                             <div class="form-group mt-2"><input type="password" name="logpass"
                                                     class="form-style" placeholder="Your Password" id="logpass"
                                                     v-model="password" autocomplete="off"><i
                                                     class="input-icon uil uil-lock-alt"></i></div>
-                                            <a href="#" class="btn mt-4" @click="register">submit</a>
+                                            <a href="#" class="btn mt-4" @click="register">Sign up</a>
                                         </div>
                                     </div>
                                 </div>
@@ -52,26 +56,12 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+
+import { login, register } from '../assets/request'
 
 const username = ref('');
 const password = ref('');
-const router = useRouter();
-
-// Login.vue
-const login = async () => {
-    // 登录逻辑
-    const response = await fetch('/api/login', { method: 'POST', body: JSON.stringify({/* 登录数据 */ }) })
-    const data = await response.json()
-    if (data.success) {
-        localStorage.setItem('userToken', data.token)
-        router.push({ name: 'info' })
-    }
-}
-
-const register = async () => {
-    // 注册逻辑    
-}
+const admin = ref(false)
 </script>
 
 <style scoped lang="scss">
@@ -162,6 +152,45 @@ h6 span {
 
 .checkbox:checked+label:before {
     transform: translateX(44px) rotate(-270deg)
+}
+
+.checkbox2:checked+label,
+.checkbox2:not(:checked)+label {
+    position: relative;
+    display: block;
+    text-align: center;
+    width: 60px;
+    height: 16px;
+    border-radius: 8px;
+    padding: 0;
+    margin: 10px auto;
+    cursor: pointer;
+    background-color: #ffeba7
+}
+
+.checkbox2:checked+label:before,
+.checkbox2:not(:checked)+label:before {
+    position: absolute;
+    display: block;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: #ffeba7;
+    background-color: #102770;
+    font-family: 'unicons';
+    content: '\2717';
+    z-index: 20;
+    top: -10px;
+    left: -10px;
+    line-height: 36px;
+    text-align: center;
+    font-size: 24px;
+    transition: all .5s ease
+}
+
+.checkbox2:checked+label:before {
+    transform: translateX(44px) ;
+    content: '\2713';
 }
 
 .card-3d-wrap {

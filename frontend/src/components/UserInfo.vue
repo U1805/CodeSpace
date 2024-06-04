@@ -2,32 +2,43 @@
     <div class="card">
         <div class="section">
             <i class="message fas fa-envelope"></i><i class="notif fas fa-bell"></i>
-            <div style="height: 100%; display: flex; flex-direction: column; justify-content: center;">
-                <div class="pic"><img :src="userData['userAvatar']"></div>
-                <div class="name">{{ userData['userName'] }}</div>
-                <div class="tag">{{ userData['userEmail'] }}</div>
+            <div
+                style="height: 100%; display: flex; flex-direction: column; justify-content: center"
+            >
+                <div class="pic">
+                    <img :src="userData ? userData['avatar'] : default_img" />
+                </div>
+                <div class="name">{{ userData ? userData['name'] : 'username' }}</div>
+                <div class="tag">{{ userData ? userData['email'] : '123456@email.com' }}</div>
             </div>
         </div>
         <div class="bottom-section">
-            <div class="social-media"><a href="#"><i class="fab fa-facebook"></i></a><a href="#"><i
-                        class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-instagram"></i></a></div>
-            <div class="videos">{{ userData['userInfo']['repo'] }}<span>算法库</span></div>
+            <div class="social-media">
+                <a href="#"><i class="fab fa-facebook"></i></a
+                ><a href="#"><i class="fab fa-twitter"></i></a
+                ><a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="videos">{{ userData ? userData['repo'] : 0 }}<span>算法库</span></div>
             <div class="border"></div>
-            <div class="subscribers">{{ userData['userInfo']['score'] }}<span>得分</span></div>
+            <div class="subscribers">{{ userData ? userData['score'] : 0 }}<span>得分</span></div>
             <div class="border"></div>
-            <div class="videws">{{ userData['userInfo']['score'] }}<span>行数</span></div>
+            <div class="videws">{{ userData ? userData['score'] : 0 }}<span>行数</span></div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+
 defineProps({
-  userData: Object
+    userData: Object
 })
+
+const default_img = ref<string>('https://img.icons8.com/?size=256&id=tZuAOUGm9AuS&format=png')
 </script>
 
 <style>
-@import url("https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/5.15.2/css/all.min.css");
+@import url('https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/font-awesome/5.15.2/css/all.min.css');
 .card {
     display: flex;
     justify-content: center;
@@ -39,7 +50,7 @@ defineProps({
 .section {
     width: 100%;
     height: 100%;
-    background: #24242E;
+    background: #24242e;
 }
 
 .message,
@@ -48,15 +59,15 @@ defineProps({
     top: 40px;
     font-size: 24px;
     cursor: pointer;
-    color: #fff
+    color: #fff;
 }
 
 .message {
-    right: 40px
+    right: 40px;
 }
 
 .notif {
-    left: 40px
+    left: 40px;
 }
 
 .pic {
@@ -65,33 +76,33 @@ defineProps({
     height: 150px;
     margin: 0 auto 20px auto;
     padding: 4px;
-    border: 2px solid #FFC107;
-    border-radius: 50%
+    border: 2px solid #ffc107;
+    border-radius: 50%;
 }
 
 .pic img {
     width: 100%;
     height: 100%;
-    border-radius: 50%
+    border-radius: 50%;
 }
 
 .pic::before {
-    content: "";
+    content: '';
     width: 100%;
     height: 100%;
     position: absolute;
-    border: 1px solid #FFC107;
+    border: 1px solid #ffc107;
     left: 0;
     top: 0;
     box-sizing: border-box;
     border-radius: 50%;
-    animation: animate 1.5s linear infinite
+    animation: animate 1.5s linear infinite;
 }
 
 @keyframes animate {
     to {
         transform: scale(1.5);
-        opacity: 0
+        opacity: 0;
     }
 }
 
@@ -100,7 +111,7 @@ defineProps({
     font-size: 28px;
     font-weight: 600;
     letter-spacing: 2px;
-    text-transform: inherit
+    text-transform: inherit;
 }
 
 .tag {
@@ -115,7 +126,7 @@ defineProps({
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #2C2B37;
+    background-color: #2c2b37;
     padding: 60px 40px;
     font-size: 28px;
     text-transform: inherit;
@@ -125,12 +136,12 @@ defineProps({
     width: 1px;
     height: 20px;
     background: #bbb;
-    margin: 0 30px
+    margin: 0 30px;
 }
 
 .bottom-section span {
     font-size: 14px;
-    display: block
+    display: block;
 }
 
 .social-media {
@@ -138,23 +149,23 @@ defineProps({
     width: 100%;
     top: -30px;
     left: 0;
-    z-index: 1
+    z-index: 1;
 }
 
 .social-media i {
     position: relative;
     width: 60px;
     height: 60px;
-    background: #FFCC66;
+    background: #ffcc66;
     border-radius: 50%;
     color: #f1f1f1;
     font-size: 24px;
     line-height: 60px !important;
-    margin: 0 10px
+    margin: 0 10px;
 }
 
 .social-media i::after {
-    content: "";
+    content: '';
     width: 100%;
     height: 100%;
     position: absolute;
@@ -164,12 +175,12 @@ defineProps({
     box-sizing: border-box;
     border-radius: 50%;
     z-index: -1;
-    transform: scale(.9);
-    transition: .4s linear
+    transform: scale(0.9);
+    transition: 0.4s linear;
 }
 
 .social-media i:hover::after {
     transform: scale(1.5);
-    opacity: 0
+    opacity: 0;
 }
 </style>

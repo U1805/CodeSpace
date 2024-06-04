@@ -7,8 +7,8 @@
     "cypress.config.*",
     "nightwatch.conf.*",
     "playwright.config.*",
-    "**/*.vue",
-    "**/*.ts",
+    "src/**/*.vue",
+    "src/**/*.ts",
   ],
   "exclude": ["src/**/__tests__/*"],
   "compilerOptions": {

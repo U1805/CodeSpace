@@ -19,15 +19,15 @@ const router = createRouter({
   ]
 })
 
-// // 模拟一个简单的登录状态
-// const isAuthenticated = () => !!localStorage.getItem('userToken')
+// 模拟一个简单的登录状态
+const isAuthenticated = () => !!localStorage.getItem('userToken')
 
-// router.beforeEach((to, from, next) => {
-//   if (to.name !== 'login' && to.name !== 'register' && !isAuthenticated()) {
-//     next({ name: 'login' })
-//   } else {
-//     next()
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  if (to.name !== 'login' && to.name !== 'register' && !isAuthenticated()) {
+    next({ name: 'login' })
+  } else {
+    next()
+  }
+})
 
 export default router
