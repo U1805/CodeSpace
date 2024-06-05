@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 8.3.0, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.4.0, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: codespace
+-- Host: localhost    Database: codespace
 -- ------------------------------------------------------
--- Server version	8.3.0
+-- Server version	8.4.0
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
+/*!50503 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -31,7 +31,7 @@ CREATE TABLE `algorithm` (
   `line` int unsigned NOT NULL COMMENT '算法文件行数',
   `language` varchar(10) NOT NULL DEFAULT 'txt' COMMENT '算法文件使用的编程语言，统一为文件后缀名',
   PRIMARY KEY (`algo_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='算法库表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3 COMMENT='算法库表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,6 +40,7 @@ CREATE TABLE `algorithm` (
 
 LOCK TABLES `algorithm` WRITE;
 /*!40000 ALTER TABLE `algorithm` DISABLE KEYS */;
+INSERT INTO `algorithm` VALUES (1,'quick-sort','public void quickSort(int[] arr, int low, int hight){ \n...',2,'a quick-sort test',33,'java'),(2,'quick-sort','public void quickSort(int[] arr, int low, int hight){ \n...',4,'一个快排测试',33,'java'),(3,'quick-sort','public void quickSort(int[] arr, int low, int hight){ \n...',4,'一个快排测试',33,'java');
 /*!40000 ALTER TABLE `algorithm` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -62,6 +63,7 @@ CREATE TABLE `algorithm_tag` (
 
 LOCK TABLES `algorithm_tag` WRITE;
 /*!40000 ALTER TABLE `algorithm_tag` DISABLE KEYS */;
+INSERT INTO `algorithm_tag` VALUES (1,'sort'),(1,'quick-sort'),(2,'sort'),(2,'quick-sort'),(3,'sort'),(3,'quick-sort');
 /*!40000 ALTER TABLE `algorithm_tag` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -82,7 +84,7 @@ CREATE TABLE `user` (
   `email` varchar(30) NOT NULL COMMENT '用户邮箱',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3 COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb3 COMMENT='用户表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,7 +93,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'admin','123456',1,0,'https://profile-avatar.csdnimg.cn/040a5243873249ca8d978c23f7f9b883_weixin_44023153.jpg','123456@email.com'),(2,'Alice','111',0,0,'https://p9-passport.byteacctimg.com/img/mosaic-legacy/3796/2975850990~150x150.awebp','alice@email.com');
+INSERT INTO `user` VALUES (1,'admin','123456',1,0,'https://profile-avatar.csdnimg.cn/040a5243873249ca8d978c23f7f9b883_weixin_44023153.jpg','123456@email.com'),(2,'Alice','111',0,0,'https://p9-passport.byteacctimg.com/img/mosaic-legacy/3796/2975850990~150x150.awebp','alice@email.com'),(3,'Bob','abcd',0,0,'',''),(4,'Tom','123',0,0,'',''),(5,'Jack','1235',0,0,'',''),(6,'Jacky','12356',0,0,'',''),(7,'Jackeylove','1234567',0,0,'',''),(8,'faker','abcdefd',0,0,'','');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -104,4 +106,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-04 19:31:06
+-- Dump completed on 2024-06-06  0:23:20
