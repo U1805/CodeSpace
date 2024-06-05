@@ -1,5 +1,6 @@
 package code.space.codespace.controller;
 
+import code.space.codespace.pojo.RegisterInfo;
 import code.space.codespace.pojo.Result;
 import code.space.codespace.pojo.LoginInfo;
 import code.space.codespace.service.LoginServer;
@@ -21,6 +22,18 @@ public class LoginController {
         }
         else {
            return Result.error("用户名不存在或密码错误");
+        }
+    }
+
+
+    @PostMapping("/register")
+    public Result register(@RequestBody RegisterInfo registerInfo){
+        Integer res = loginServer.register(registerInfo);
+        if(res==0){
+            return Result.error("用户名重复");
+        }
+        else{
+            return Result.success("cswaerasd");
         }
     }
 }

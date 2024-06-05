@@ -2,6 +2,7 @@ package code.space.codespace.service.impl;
 
 import code.space.codespace.mapper.AlgoMapper;
 import code.space.codespace.pojo.Algorithm;
+import code.space.codespace.pojo.UploadInfo;
 import code.space.codespace.service.AlgoServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,48 @@ public class AlgoSeverImpl implements AlgoServer{
                 algorithm[i].setTag(tags);
             }
             return algorithm;
+        }
+    }
+
+    @Override
+    public Integer upload(UploadInfo uploadInfo) {
+        if (uploadInfo.getTitle()==null) {
+            return 0;
+        }
+        else if (uploadInfo.getContent()==null) {
+            return 0;
+        }
+        else if (uploadInfo.getAuthor()==null) {
+            return 0;
+        }
+        else if (uploadInfo.getLine()==null) {
+            return 0;
+        }
+        else if (uploadInfo.getLanguage()==null) {
+            return 0;
+        }
+        else if (uploadInfo.getDesc()==null) {
+            return 0;
+        }
+        else if (uploadInfo.getTags()==null) {
+            return 0;
+        }
+        else {
+            Integer author_id=algoMapper.find_author(uploadInfo.getAuthor());
+            if (author_id==null) {
+                return 0;
+            }
+            Integer algo_id=algoMapper.max_algo_id();
+            if (algo_id==null) {
+                algo_id=0;
+            }
+            algoMapper.upload(algo_id+1, uploadInfo.getTitle(), uploadInfo.getContent(), author_id,
+                    uploadInfo.getDesc(), uploadInfo.getLine(), uploadInfo.getLanguage());
+            String[] tags=uploadInfo.getTags();
+            for (int i=0; i<tags.length; i++) {
+                algoMapper.upload_tag(algo_id+1, tags[i]);
+            }
+            return 1;
         }
     }
 }
