@@ -52,6 +52,7 @@
                 <SplitLayout
                     ref="splitLayout"
                     @panelClose="onPanelClose"
+                    @click="onPanelClick"
                     @canLoadLayout="loadInnerLayout"
                 >
                     <template #tabContentRender="{ panel }">
@@ -73,6 +74,7 @@
         </template>
         <template #titleBarRight>
             <span style="width: 210px"></span>
+            <el-button :icon="Close" size="small" text id="quit_btn" @click="logout"/>
         </template>
         <template #statusBar>
             <span>Welcome to CodeSpace-DevNet(CSDN) !</span>
@@ -91,7 +93,7 @@ import {
     CodeLayoutInstance,
     CodeLayoutPanelInternal
 } from 'vue-code-layout'
-import { Search } from '@element-plus/icons-vue'
+import { Close, Search } from '@element-plus/icons-vue'
 import UserInfo from '../components/UserInfo.vue'
 import UploadView from '../components/UploadView.vue'
 
@@ -143,23 +145,38 @@ const setTitle = (new_title: string) => {
 import IconMarkdown from '../components/icons/IconMarkdown.vue'
 import { Algo, User } from '../assets/interface'
 import { getUser, search } from '@/assets/request'
+import router from '@/router'
 const file_opened = ref(0)
+const file_cnt = ref(0)
 const openFile = (repo) => {
-    split.value.addPanel({
+    if (split.value.children.findIndex((panel) => panel.data.repo == repo) != -1) return
+
+    const t = split.value.addPanel({
         title: repo['title'],
-        name: 'file' + file_opened.value,
+        name: 'file' + file_cnt.value++,
         iconSmall: () => h(IconMarkdown),
         data: { value: repo['content'], language: repo['language'], repo: repo },
         closeType: 'close'
     })
+
+    t.activeSelf()
     file_opened.value++
     currentSelectd.value = repo
 }
-function onPanelClose(panel: CodeLayoutPanelInternal, resolve: () => void) {
+const onPanelClose = (panel: CodeLayoutPanelInternal, resolve: () => void) => {
     if (file_opened.value > 1) {
         resolve()
         file_opened.value--
     }
+}
+const onPanelClick = () => {
+    // 点击标签切换算法信息
+    currentSelectd.value = split.value.activePanel.data.repo
+}
+
+const logout = ()=>{
+    localStorage.removeItem("userToken");
+    router.push('/login')
 }
 
 const userData = ref<User>()
@@ -202,5 +219,13 @@ const algoData = ref<Algo[]>()
 .algo_info .el-row {
     margin-bottom: 10px;
     margin-left: 20px;
+}
+
+#quit_btn {
+    margin-right: 10px;
+    color: white;
+    font-size: large;
+    --el-fill-color-light: #04395e;
+    --el-fill-color: #04395e;
 }
 </style>

@@ -58,7 +58,7 @@ export const getUser = async (username: string) => {
         msg: 'success',
         data: {
             username: 'Kaho',
-            avatar: 'https://img.moegirl.org.cn/common/7/7a/Name_kaho_icon_v2.png',
+            avatar: 'https://avatars.githubusercontent.com/u/171446778',
             email: '123@email.com',
             repo: 20,
             score: 120,

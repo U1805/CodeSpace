@@ -18,6 +18,7 @@
 ### Project Setup
 
 ```sh
+# 自行安装 node.js
 cd frontend
 npm install
 npm run dev
@@ -45,6 +46,9 @@ npm run dev
 
 `@RequestBody LoginInfo loginInfo` -> LoginInfo 在 `pojo` 中定义实体类  
 `@PathParam("username") String username`
+
+- 导出数据库：`mysqldump -u root -p codespace > codespace.sql`
+- 导入数据库：`mysql -uroot -p codespace < codespace.sql` // 先创建 codespace 数据库
 
 ### Recommended IDE Setup
 
