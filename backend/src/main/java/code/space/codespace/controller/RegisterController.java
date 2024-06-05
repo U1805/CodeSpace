@@ -2,8 +2,6 @@ package code.space.codespace.controller;
 
 import code.space.codespace.pojo.RegisterInfo;
 import code.space.codespace.pojo.Result;
-import code.space.codespace.pojo.LoginInfo;
-import code.space.codespace.service.LoginServer;
 import code.space.codespace.service.RegisterServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

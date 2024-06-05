@@ -2,7 +2,6 @@ package code.space.codespace.service.impl;
 
 import code.space.codespace.mapper.RegisterMapper;
 import code.space.codespace.pojo.RegisterInfo;
-//import code.space.codespace.service.LoginServer;
 import code.space.codespace.service.RegisterServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +20,13 @@ public class RegisterServiceImpl implements RegisterServer {
             return 0;//username repeat
         }
         else {
-            int user_id=registerMapper.max_user_id();
-            registerMapper.register(user_id+1, registerInfo.getUsername(), registerInfo.getPassword());
+            Integer user_id=registerMapper.max_user_id();
+            if (user_id==null){
+                registerMapper.register(1, registerInfo.getUsername(), registerInfo.getPassword());
+            }
+            else {
+                registerMapper.register(user_id+1, registerInfo.getUsername(), registerInfo.getPassword());
+            }
             return 1;
         }
     }
