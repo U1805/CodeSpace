@@ -16,6 +16,11 @@ public class UserController {
     @GetMapping("/users")
     public Result info(@PathParam("username") String username){
         User user = userServer.info(username);
-        return Result.success(user);
+        if (user==null) {
+            return Result.error("This user hasn't uploaded algorithms.");
+        }
+        else {
+            return Result.success(user);
+        }
     }
 }

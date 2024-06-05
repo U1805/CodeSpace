@@ -42,7 +42,7 @@ npm run dev
 - 后端接口实现后使用 [Postman](https://www.postman.com/) 测试
 
 
-后端数据库使用 MySQL，账号密码 root/123456，数据库名为 codespace
+后端数据库使用 MySQL 8.3.0，账号密码 root/123456，数据库名为 codespace
 
 `@RequestBody LoginInfo loginInfo` -> LoginInfo 在 `pojo` 中定义实体类  
 `@PathParam("username") String username`

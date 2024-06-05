@@ -13,11 +13,16 @@ public class UserServerImpl implements UserServer {
 
     @Override
     public User info(String username) {
-        User user = userMapper.search(username);
-        Integer repo = userMapper.count_algo(username);
-        user.setRepo(repo != null?repo:0);
-        Integer line = userMapper.count_line(username);
-        user.setLine(line != null?line:0);
-        return user;
+        User user = userMapper.search(username); //When user is null, need to return null to make UserController return 0
+        if (user==null) {
+            return null;
+        }
+        else {
+            Integer repo = userMapper.count_algo(username);
+            user.setRepo(repo != null?repo:0);
+            Integer line = userMapper.count_line(username);
+            user.setLine(line != null?line:0);
+            return user;
+        }
     }
 }
