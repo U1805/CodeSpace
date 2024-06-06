@@ -16,24 +16,25 @@ public class LoginController {
 
     @PostMapping("/login")
     public Result login(@RequestBody LoginInfo loginInfo){
-        int res = loginServer.login(loginInfo);
-        if(res == 1){
-            return Result.success("cswaerasd");
+        String res = loginServer.login(loginInfo);
+        log.info(res);
+        if(res.length() == 0){
+            return Result.error("用户名不存在或密码错误");
         }
         else {
-           return Result.error("用户名不存在或密码错误");
+            return Result.success(res);
         }
     }
 
 
     @PostMapping("/register")
     public Result register(@RequestBody RegisterInfo registerInfo){
-        Integer res = loginServer.register(registerInfo);
-        if(res==0){
+        String res = loginServer.register(registerInfo);
+        if(res.length() == 0){
             return Result.error("用户名重复");
         }
         else{
-            return Result.success("cswaerasd");
+            return Result.success(res);
         }
     }
 }

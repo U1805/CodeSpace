@@ -14,7 +14,7 @@ public class UserServerImpl implements UserServer {
     @Override
     public User info(String username) {
         User user = userMapper.search(username); //When user is null, need to return null to make UserController return 0
-        if (user==null) {
+        if (user == null) {
             return null;
         }
         else {

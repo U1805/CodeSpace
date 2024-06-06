@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Algorithm {
-    Integer algo_id;
+    Integer algoId;
     String title;
     String author;
     String content;
     Integer line;
     String language;
     String desc;
-    String[] tag=null;
+    String[] tags={};
 }

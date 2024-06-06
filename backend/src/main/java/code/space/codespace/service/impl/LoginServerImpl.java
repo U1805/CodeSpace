@@ -13,28 +13,24 @@ public class LoginServerImpl implements LoginServer {
     private UserMapper userMapper;
 
     @Override
-    public int login(LoginInfo loginInfo) {
+    public String login(LoginInfo loginInfo) {
         int admin_ = loginInfo.getAdmin()? 1 : 0;
-        return userMapper.login(loginInfo.getUsername(), loginInfo.getPassword(), admin_);
+        if (userMapper.login(loginInfo.getUsername(), loginInfo.getPassword(), admin_) == 1){
+            return "cswaerasd"; // TODO: 计算 userToken 并返回
+        }
+        else {
+            return "";
+        }
     }
 
     @Override
-    public Integer register(RegisterInfo registerInfo) {
-//        if (registerInfo.getUsername().length()<20) {
-//
-//        }
+    public String register(RegisterInfo registerInfo) {
         if (userMapper.find_username(registerInfo.getUsername())>0) {
-            return 0;//username repeat
+            return ""; //username repeat
         }
         else {
-            Integer user_id=userMapper.max_user_id();
-            if (user_id==null){
-                userMapper.register(1, registerInfo.getUsername(), registerInfo.getPassword());
-            }
-            else {
-                userMapper.register(user_id+1, registerInfo.getUsername(), registerInfo.getPassword());
-            }
-            return 1;
+            userMapper.register(registerInfo.getUsername(), registerInfo.getPassword());
+            return "cswaerasd"; // TODO: 计算 userToken 并返回
         }
     }
 }

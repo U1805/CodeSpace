@@ -13,6 +13,6 @@ public class UploadInfo {
     String author;
     Integer line;
     String language;
-    String desc=null;
-    String[] tags=null;
+    String desc;
+    String[] tags={};
 }
