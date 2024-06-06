@@ -20,6 +20,7 @@ export const register = async (form: {
     const result:Result = (await axios_ins.post("/register", data)).data
     if (result.code == 1) {
         localStorage.setItem('userToken', form.username)
+        window.location.href = "/";
     } else {
         alert(result.msg)
     }
@@ -33,6 +34,7 @@ export const login = async (form: {
     const result:Result = (await axios_ins.post("/login", form)).data
     if (result.code == 1) {
         localStorage.setItem('userToken', form.username)
+        window.location.href = "/";
     } else {
         alert(result.msg)
     }
@@ -67,12 +69,6 @@ export const uploadAlgo = async (form:{
     console.log(form);
     
     const result:Result = (await axios_ins.post("/algos", form)).data
-    // console.log(data)
-    // const result: Result = {
-    //     code: 1,
-    //     msg: 'success',
-    //     data: null
-    // }
     if (result.code == 1) {
         return
     } else {

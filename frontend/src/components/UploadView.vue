@@ -12,8 +12,8 @@
         <el-row>
             <h2>上传算法库</h2>
         </el-row>
-        <el-form :model="form">
-            <el-form-item label="文件上传">
+        <el-form :model="form" :rules="rules" ref="ruleFormRef" status-icon>
+            <el-form-item label="*文件上传">
                 <el-upload
                     class="upload-demo"
                     drag
@@ -36,7 +36,7 @@
                     </template>
                 </el-upload>
             </el-form-item>
-            <el-form-item label="算法库名">
+            <el-form-item label="*算法库名">
                 <el-input
                     v-model="form.title"
                     placeholder="填写该算法库的名称"
@@ -91,7 +91,8 @@
 
 <script setup lang="ts">
 import { uploadAlgo } from '@/assets/request'
-import { UploadInstance, UploadProps, UploadRawFile } from 'element-plus';
+import { RuleForm, rules } from '@/assets/uploadRule'
+import { FormInstance, UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 import { reactive, ref } from 'vue'
 
 const tagOptions = [
@@ -113,9 +114,9 @@ const allow_type = ['html', 'css', 'javascript', 'c', 'cpp', 'cs', 'java', 'py',
 
 const upload = ref<UploadInstance>()
 const handleExceed: UploadProps['onExceed'] = (files) => {
-  upload.value!.clearFiles()
-  const file = files[0] as UploadRawFile
-  upload.value!.handleStart(file)
+    upload.value!.clearFiles()
+    const file = files[0] as UploadRawFile
+    upload.value!.handleStart(file)
 }
 
 const handleFileUpload = (file, upload_files) => {
@@ -144,7 +145,7 @@ const countTextFile = (file, ext) => {
 }
 
 const username = localStorage.getItem('userToken')
-const form = reactive({
+const form = reactive<RuleForm>({
     title: '',
     content: '',
     author: username,
@@ -154,19 +155,25 @@ const form = reactive({
     language: '无'
 })
 
+const ruleFormRef = ref<FormInstance>()
 const emit = defineEmits(['reflesh'])
 const onSubmit = async () => {
-    await uploadAlgo(form)
-    form.title = ''
-    form.content = ''
-    form.author = username
-    form.tags = []
-    form.desc = ''
-    form.line = 0
-    form.language = '无'
-    upload.value!.clearFiles()
-    emit('reflesh')
-    
+    await ruleFormRef.value.validate(async (valid, fields) => {
+        if (valid) {
+            await uploadAlgo(form)
+            form.title = ''
+            form.content = ''
+            form.author = username
+            form.tags = []
+            form.desc = ''
+            form.line = 0
+            form.language = '无'
+            upload.value!.clearFiles()
+            emit('reflesh')
+        } else {
+            console.log('error submit!', fields)
+        }
+    })
 }
 </script>
 

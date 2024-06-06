@@ -25,7 +25,7 @@
                                                 <label for="admin" style="margin-top: 24px;"></label>
                                                 <span>Log in as an Administrator</span>
                                             </div>
-                                            <a href="/" class="btn mt-4" @click="login(form)">Log in</a>
+                                            <a class="btn mt-4" @click="login(form)">Log in</a>
                                             <p class="mb-0 mt-4 text-center"><a href="#0" class="link">Forgot your password?</a></p>
                                         </div>
                                     </div>
@@ -41,7 +41,7 @@
                                                     class="form-style" placeholder="Your Password" id="logpass2"
                                                     v-model="form.password" autocomplete="off"><i
                                                     class="input-icon uil uil-lock-alt"></i></div>
-                                            <a href="/" class="btn mt-4" @click="register(form)">Sign up</a>
+                                            <a class="btn mt-4" @click="register(form)">Sign up</a>
                                         </div>
                                     </div>
                                 </div>

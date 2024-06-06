@@ -42,13 +42,13 @@ public class AlgoSeverImpl implements AlgoServer{
 
     @Override
     public Integer upload(UploadInfo uploadInfo) {
-        if (uploadInfo.getTitle()==null) {
+        if (uploadInfo.getTitle()==null || uploadInfo.getTitle()=="") {
             return 0;
         }
-        else if (uploadInfo.getContent()==null) {
+        else if (uploadInfo.getContent()==null || uploadInfo.getContent()=="") {
             return 0;
         }
-        else if (uploadInfo.getAuthor()==null) {
+        else if (uploadInfo.getAuthor()==null || uploadInfo.getAuthor()=="") {
             return 0;
         }
         else if (uploadInfo.getLine()==null) {
