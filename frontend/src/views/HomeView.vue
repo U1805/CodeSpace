@@ -12,7 +12,6 @@
                     v-model="keyword"
                     style="padding: 20px"
                     placeholder="搜索"
-                    @change="search(keyword, '')"
                     :prefix-icon="Search"
                 />
             </div>
@@ -38,7 +37,9 @@
                     >
                     <el-row
                         ><el-col :span="4">算法标签</el-col
-                        ><el-col :span="20">{{ currentSelectd['tags'].join(', ') }}</el-col></el-row
+                        ><el-col :span="20">{{
+                            currentSelectd['tags'].length ? currentSelectd['tags'].join(', ') : ''
+                        }}</el-col></el-row
                     >
                 </div>
             </div>
@@ -46,14 +47,14 @@
         <template #titleBarCenter> {{ title }} </template>
         <template #centerArea>
             <slot name="center1" v-if="title == '用户中心'">
-                <UploadView></UploadView>
+                <UploadView @reflesh="reflesh"></UploadView>
             </slot>
             <slot name="center2" v-else>
                 <SplitLayout
                     ref="splitLayout"
                     @panelClose="onPanelClose"
-                    @click="onPanelClick"
                     @canLoadLayout="loadInnerLayout"
+                    @click="onPanelClick"
                 >
                     <template #tabContentRender="{ panel }">
                         <div @click="currentSelectd = panel.data.repo" style="height: 100%">
@@ -74,7 +75,7 @@
         </template>
         <template #titleBarRight>
             <span style="width: 210px"></span>
-            <el-button :icon="Close" size="small" text id="quit_btn" @click="logout"/>
+            <el-button :icon="Close" size="small" text id="quit_btn" @click="logout" />
         </template>
         <template #statusBar>
             <span>Welcome to CodeSpace-DevNet(CSDN) !</span>
@@ -84,7 +85,7 @@
 
 <script setup lang="ts">
 import { loadLayout, config, menuData } from '@/assets/layout'
-import { ref, onMounted, nextTick, h } from 'vue'
+import { ref, onMounted, nextTick, h, watch } from 'vue'
 import {
     CodeLayout,
     SplitLayout,
@@ -122,10 +123,15 @@ onMounted(() => {
         const username = localStorage.getItem('userToken')
         userData.value = await getUser(username)
         setBadge(userData.value.repo.toString())
-        algoData.value = await search(username, '')
+        algoData.value = await search('', username)
     })
 })
 // =====初始化布局结束======
+
+const userData = ref<User>()
+const keyword = ref<string>()
+const currentSelectd = ref()
+const algoData = ref<Algo[]>()
 
 const showBottom = (flag: boolean) => {
     config.bottomPanel = flag
@@ -174,15 +180,26 @@ const onPanelClick = () => {
     currentSelectd.value = split.value.activePanel.data.repo
 }
 
-const logout = ()=>{
-    localStorage.removeItem("userToken");
+const logout = () => {
+    localStorage.removeItem('userToken')
     router.push('/login')
 }
 
-const userData = ref<User>()
-const keyword = ref<string>()
-const currentSelectd = ref()
-const algoData = ref<Algo[]>()
+const reflesh = async () => {
+    const username = localStorage.getItem('userToken')
+    userData.value = await getUser(username)
+    setBadge(userData.value.repo.toString())
+    algoData.value = await search('', username)
+}
+
+watch(keyword, async (newValue, oldValue) => {
+    if (newValue == '') {
+        const username = localStorage.getItem('userToken')
+        algoData.value = await search('', username)
+    } else {
+        algoData.value = await search(keyword.value, '')
+    }
+})
 </script>
 
 <style lang="scss">

@@ -20,9 +20,11 @@
                     multiple
                     action="#"
                     :limit="1"
+                    :on-exceed="handleExceed"
                     :auto-upload="false"
                     :on-change="handleFileUpload"
                     :on-remove="handleFileUpload"
+                    ref="upload"
                     style="width: 100%"
                 >
                     <el-icon class="el-icon--upload"><upload-filled /></el-icon>
@@ -88,7 +90,9 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { uploadAlgo } from '@/assets/request'
+import { UploadInstance, UploadProps, UploadRawFile } from 'element-plus';
+import { reactive, ref } from 'vue'
 
 const tagOptions = [
     {
@@ -105,18 +109,21 @@ const tagOptions = [
     }
 ]
 
-const allow_type = [
-    'html', 'css', 'javascript',
-    'c', 'cpp', 'cs', 'java', 'py', 'go',
-    'txt', 'md'
-]
+const allow_type = ['html', 'css', 'javascript', 'c', 'cpp', 'cs', 'java', 'py', 'go', 'txt', 'md']
+
+const upload = ref<UploadInstance>()
+const handleExceed: UploadProps['onExceed'] = (files) => {
+  upload.value!.clearFiles()
+  const file = files[0] as UploadRawFile
+  upload.value!.handleStart(file)
+}
 
 const handleFileUpload = (file, upload_files) => {
-    form.content = ""
+    form.content = ''
     form.line = 0
     upload_files.forEach((file) => {
-        const ext = file.raw.name.split('.')[file.raw.name.split('.').length-1]
-        if (allow_type.findIndex(ele => ele == ext) != -1){
+        const ext = file.raw.name.split('.')[file.raw.name.split('.').length - 1]
+        if (allow_type.findIndex((ele) => ele == ext) != -1) {
             form.language = ext
             countTextFile(file.raw, ext)
         }
@@ -131,13 +138,12 @@ const countTextFile = (file, ext) => {
         const wordCount = content.split(/\s+/).length
         const charCount = content.length
         const lineCount = content.split(/\n/).length
-        form.content =content,
-        form.line = lineCount
+        ;(form.content = content), (form.line = lineCount)
     }
     reader.readAsText(file)
 }
 
-const username = localStorage.getItem("userToken")
+const username = localStorage.getItem('userToken')
 const form = reactive({
     title: '',
     content: '',
@@ -148,8 +154,19 @@ const form = reactive({
     language: '无'
 })
 
-const onSubmit = () => {
-    console.log(form)
+const emit = defineEmits(['reflesh'])
+const onSubmit = async () => {
+    await uploadAlgo(form)
+    form.title = ''
+    form.content = ''
+    form.author = username
+    form.tags = []
+    form.desc = ''
+    form.line = 0
+    form.language = '无'
+    upload.value!.clearFiles()
+    emit('reflesh')
+    
 }
 </script>
 

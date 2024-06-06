@@ -13,19 +13,19 @@
                                     <div class="center-wrap">
                                         <div class="section text-center">
                                             <h4 class="mb-4 pb-3">Log In</h4>
-                                            <div class="form-group"><input type="text" name="logname" class="form-style"
-                                                    placeholder="Your User Name" id="logname" v-model="username"
+                                            <div class="form-group"><input type="text" name="logname1" class="form-style"
+                                                    placeholder="Your User Name" id="logname1" v-model="form.username"
                                                     autocomplete="off"><i class="input-icon uil uil-user"></i></div>
-                                            <div class="form-group mt-2"><input type="password" name="logpass"
-                                                    class="form-style" placeholder="Your Password" id="logpass"
-                                                    v-model="password" autocomplete="off"><i
+                                            <div class="form-group mt-2"><input type="password" name="logpass1"
+                                                    class="form-style" placeholder="Your Password" id="logpass1"
+                                                    v-model="form.password" autocomplete="off"><i
                                                     class="input-icon uil uil-lock-alt"></i></div>
                                             <div class="form-group mt-2">
-                                                <input class="checkbox2" type="checkbox" id="admin" name="admin" :checked="admin"/>
+                                                <input class="checkbox2" type="checkbox" id="admin" name="admin" :checked="form.admin"/>
                                                 <label for="admin" style="margin-top: 24px;"></label>
                                                 <span>Log in as an Administrator</span>
                                             </div>
-                                            <a href="/" class="btn mt-4" @click="login(username, password, admin)">Log in</a>
+                                            <a href="/" class="btn mt-4" @click="login(form)">Log in</a>
                                             <p class="mb-0 mt-4 text-center"><a href="#0" class="link">Forgot your password?</a></p>
                                         </div>
                                     </div>
@@ -34,14 +34,14 @@
                                     <div class="center-wrap">
                                         <div class="section text-center">
                                             <h4 class="mb-4 pb-3">Sign Up</h4>
-                                            <div class="form-group"><input type="text" name="logname" class="form-style"
-                                                    placeholder="Your Full Name" id="logname" v-model="username"
+                                            <div class="form-group"><input type="text" name="logname2" class="form-style"
+                                                    placeholder="Your Full Name" id="logname2" v-model="form.username"
                                                     autocomplete="off"><i class="input-icon uil uil-user"></i></div>
-                                            <div class="form-group mt-2"><input type="password" name="logpass"
-                                                    class="form-style" placeholder="Your Password" id="logpass"
-                                                    v-model="password" autocomplete="off"><i
+                                            <div class="form-group mt-2"><input type="password" name="logpass2"
+                                                    class="form-style" placeholder="Your Password" id="logpass2"
+                                                    v-model="form.password" autocomplete="off"><i
                                                     class="input-icon uil uil-lock-alt"></i></div>
-                                            <a href="#" class="btn mt-4" @click="register">Sign up</a>
+                                            <a href="/" class="btn mt-4" @click="register(form)">Sign up</a>
                                         </div>
                                     </div>
                                 </div>
@@ -55,13 +55,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { reactive } from 'vue';
 
 import { login, register } from '../assets/request'
 
-const username = ref('');
-const password = ref('');
-const admin = ref(false)
+const form = reactive({
+    username: '',
+    password: '',
+    admin: false
+})
 </script>
 
 <style scoped lang="scss">

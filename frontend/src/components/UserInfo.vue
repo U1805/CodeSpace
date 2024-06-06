@@ -8,7 +8,7 @@
                 <div class="pic">
                     <img :src="userData ? userData['avatar'] : default_img" />
                 </div>
-                <div class="name">{{ userData ? userData['name'] : 'username' }}</div>
+                <div class="name">{{ userData ? userData['username'] : 'username' }}</div>
                 <div class="tag">{{ userData ? userData['email'] : '123456@email.com' }}</div>
             </div>
         </div>
@@ -22,7 +22,7 @@
             <div class="border"></div>
             <div class="subscribers">{{ userData ? userData['score'] : 0 }}<span>得分</span></div>
             <div class="border"></div>
-            <div class="videws">{{ userData ? userData['score'] : 0 }}<span>行数</span></div>
+            <div class="videws">{{ userData ? userData['line'] : 0 }}<span>行数</span></div>
         </div>
     </div>
 </template>
