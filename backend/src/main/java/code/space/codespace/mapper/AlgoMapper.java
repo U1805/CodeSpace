@@ -12,7 +12,7 @@ public interface AlgoMapper {
             "where username='${author}'")
     Algorithm[] search_by_author(String author);
 
-    @Select("select DISTINCT algo_id, title, username, content, line, language, `desc` " +
+    @Select("select DISTINCT algo_id, title, username as author, content, line, language, `desc` " +
             "from algorithm_tag natural join (algorithm join `user` on (author=user_id)) " +
             "where tag like concat('%', '${tag}','%')")
     Algorithm[] search_by_tag(String tag);

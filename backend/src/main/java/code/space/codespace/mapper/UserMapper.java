@@ -1,6 +1,7 @@
 package code.space.codespace.mapper;
 
 import code.space.codespace.pojo.User;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -23,7 +24,7 @@ public interface UserMapper {
     @Select("select count(*) from user where username='${username}'")
     Integer find_username(String username);
 
-    @Select("insert into user(username, password) value('${username}', '${password}')")
+    @Insert("insert into user(username, password, avatar) value('${username}', '${password}', 'https://avatars.githubusercontent.com/u/171446778')")
     Integer register(String username, String password);
 
     @Update("update user set score = score+10 where username = #{author}")
