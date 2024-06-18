@@ -13,7 +13,7 @@ public class UserServerImpl implements UserServer {
 
     @Override
     public User info(String username) {
-        User user = userMapper.search(username); //When user is null, need to return null to make UserController return 0
+        User user = userMapper.search(username);
         if (user == null) {
             return null;
         }
@@ -24,5 +24,10 @@ public class UserServerImpl implements UserServer {
             user.setLine(line != null?line:0);
             return user;
         }
+    }
+
+    @Override
+    public void edit(User user) {
+        userMapper.setInfo(user);
     }
 }

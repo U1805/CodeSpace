@@ -1,7 +1,31 @@
 <template>
     <div class="card">
+        <el-drawer v-model="dialog" title="编辑用户信息" :before-close="cancelForm" direction="ltr">
+            <div>
+                <el-form :model="form">
+                    <el-form-item label="Name" label-width="80px">
+                        <el-input :disabled="true" v-model="form.username" autocomplete="off" />
+                    </el-form-item>
+                    <el-form-item label="Avatar" label-width="80px">
+                        <div style="display: flex; align-items: flex-end;">
+                            <el-avatar shape="square" :size="100" fit="fill" :src="form.avatar" />
+                            <el-button :icon="Edit" style="width: 10px; margin-left: 5px"/>
+                        </div>
+                    </el-form-item>
+                    <el-form-item label="Email" label-width="80px">
+                        <el-input v-model="form.email" autocomplete="off" />
+                    </el-form-item>
+                </el-form>
+                <div style="text-align: right;">
+                    <el-button @click="cancelForm">Cancel</el-button>
+                    <el-button type="primary" :loading="loading" @click="onClick">
+                        {{ loading ? 'Submitting ...' : 'Submit' }}
+                    </el-button>
+                </div>
+            </div>
+        </el-drawer>
         <div class="section">
-            <i class="message fas fa-envelope"></i><i class="notif fas fa-bell"></i>
+            <i class="message fas fa-edit" @click="openEdit()"></i><i class="notif fas fa-bell"></i>
             <div
                 style="height: 100%; display: flex; flex-direction: column; justify-content: center"
             >
@@ -28,13 +52,65 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { inject, reactive, ref } from 'vue'
+import { ElDrawer } from 'element-plus'
+import { ElNotification } from 'element-plus'
+import { Edit } from '@element-plus/icons-vue'
+import { editInfo } from '@/assets/request';
 
-defineProps({
+
+let timer
+
+const dialog = ref(false)
+const loading = ref(false)
+
+const props = defineProps({
     userData: Object
 })
-
 const default_img = ref<string>('https://img.icons8.com/?size=256&id=tZuAOUGm9AuS&format=png')
+
+const form = reactive({
+    username: '',
+    avatar: '',
+    email: ''
+})
+
+const openEdit = () => {
+    form.username = props.userData.username
+    form.avatar = props.userData.avatar
+    form.email = props.userData.email
+    dialog.value = true
+}
+
+const reflesh = inject('reflesh') as Function
+const onClick = async () => {
+    loading.value = true
+    const res = await editInfo(form)
+    setTimeout(() => {
+        loading.value = false
+        dialog.value = false
+        if (res === 'success') {
+            ElNotification({
+                title: '编辑成功',
+                message: '用户信息修改成功',
+                type: 'success'
+            })
+            reflesh()
+        }else{
+            ElNotification({
+                title: '编辑错误',
+                message: res,
+                type: 'error'
+            })
+        }
+    }, 800)
+}
+
+const cancelForm = () => {
+    loading.value = false
+    dialog.value = false
+    clearTimeout(timer)
+}
 </script>
 
 <style>

@@ -85,7 +85,7 @@
 
 <script setup lang="ts">
 import { loadLayout, config, menuData } from '@/assets/layout'
-import { ref, onMounted, nextTick, h, watch } from 'vue'
+import { ref, onMounted, nextTick, h, watch, provide } from 'vue'
 import {
     CodeLayout,
     SplitLayout,
@@ -120,7 +120,7 @@ function loadInnerLayout() {
 onMounted(() => {
     nextTick(async () => {
         groups.value = loadLayout(codeLayout.value)
-        const username = localStorage.getItem('userToken')
+        const username = localStorage.getItem('username')
         userData.value = await getUser(username)
         setBadge(userData.value.repo.toString())
         algoData.value = await search('', username)
@@ -181,20 +181,23 @@ const onPanelClick = () => {
 }
 
 const logout = () => {
+    localStorage.removeItem('username')
     localStorage.removeItem('userToken')
     router.push('/login')
 }
 
 const reflesh = async () => {
-    const username = localStorage.getItem('userToken')
+    const username = localStorage.getItem('username')
     userData.value = await getUser(username)
     setBadge(userData.value.repo.toString())
     algoData.value = await search('', username)
 }
 
+provide("reflesh", reflesh)
+
 watch(keyword, async (newValue, oldValue) => {
     if (newValue == '') {
-        const username = localStorage.getItem('userToken')
+        const username = localStorage.getItem('username')
         algoData.value = await search('', username)
     } else {
         algoData.value = await search(keyword.value, '')

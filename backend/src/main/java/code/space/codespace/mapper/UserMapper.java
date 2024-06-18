@@ -29,4 +29,7 @@ public interface UserMapper {
 
     @Update("update user set score = score+#{score} where username = #{author}")
     void updateScore(String author, int score);
+
+    @Update("update user set avatar = #{avatar}, email = #{email} where username = #{username}")
+    void setInfo(User user);
 }

@@ -19,7 +19,8 @@ export const register = async (form: {
     
     const result:Result = (await axios_ins.post("/register", data)).data
     if (result.code == 1) {
-        localStorage.setItem('userToken', form.username)
+        localStorage.setItem('userToken', result.data)
+        localStorage.setItem('username', form.username)
         window.location.href = "/";
         return result.msg
     } else {
@@ -34,7 +35,8 @@ export const login = async (form: {
 }) => {
     const result:Result = (await axios_ins.post("/login", form)).data
     if (result.code == 1) {
-        localStorage.setItem('userToken', form.username)
+        localStorage.setItem('userToken', result.data)
+        localStorage.setItem('username', form.username)
         window.location.href = "/";
         return result.msg
     } else {
@@ -52,10 +54,9 @@ export const getUser = async (username: string) => {
     if (result.code == 1) {
         const user: User = result.data
         console.log(user);
-        
         return user
     } else {
-        alert(result.msg)
+        window.location.href = "/login"
     }
 }
 
@@ -89,4 +90,14 @@ export const search = async (keyword: string, username: string) => {
     } else {
         alert(result.msg)
     }
+}
+
+export const editInfo = async (form: {
+    username: string,
+    avatar: string,
+    email: string
+}) => {
+    console.log(form);
+    const result:Result = (await axios_ins.put("/users", form)).data
+    return result.msg
 }

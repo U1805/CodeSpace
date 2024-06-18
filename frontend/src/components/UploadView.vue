@@ -178,7 +178,7 @@ const countTextFile = (file, ext) => {
     reader.readAsText(file)
 }
 
-const username = localStorage.getItem('userToken')
+const username = localStorage.getItem('username')
 const form = reactive<RuleForm>({
     title: '',
     content: '',
