@@ -16,8 +16,8 @@ public class LoginController {
 
     @PostMapping("/login")
     public Result login(@RequestBody LoginInfo loginInfo){
+        log.info("管理员? " + loginInfo.getAdmin().toString());
         String res = loginServer.login(loginInfo);
-        log.info(res);
         if(res.length() == 0){
             return Result.error("用户名不存在或密码错误");
         }
@@ -30,10 +30,15 @@ public class LoginController {
     @PostMapping("/register")
     public Result register(@RequestBody RegisterInfo registerInfo){
         String res = loginServer.register(registerInfo);
-        if(res.length() == 0){
-            return Result.error("用户名重复");
-        }
-        else{
+        if(res == "username-repeat"){
+            return Result.error("该用户名已被注册，换一个试试吧");
+        } else if (res == "password-weak") {
+            return Result.error("密码安全性不足，强度太弱");
+        } else if (res == "username-empty") {
+            return Result.error("用户名为空");
+        } else if (res == "password-empty") {
+            return Result.error("密码为空");
+        } else{
             return Result.success(res);
         }
     }

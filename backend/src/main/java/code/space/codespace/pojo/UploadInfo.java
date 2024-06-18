@@ -14,5 +14,6 @@ public class UploadInfo {
     Integer line;
     String language;
     String desc;
+    Boolean origin;
     String[] tags={};
 }

@@ -35,7 +35,7 @@ public class AlgoController {
             return Result.error("缺少必要信息");
         }
         else{
-            return Result.success();
+            return Result.success(res);
         }
     }
 }

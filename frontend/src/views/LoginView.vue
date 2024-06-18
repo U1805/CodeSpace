@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
     <div class="section">
         <div class="container">
@@ -13,20 +12,25 @@
                                     <div class="center-wrap">
                                         <div class="section text-center">
                                             <h4 class="mb-4 pb-3">Log In</h4>
-                                            <div class="form-group"><input type="text" name="logname1" class="form-style"
-                                                    placeholder="Your User Name" id="logname1" v-model="form.username"
-                                                    autocomplete="off"><i class="input-icon uil uil-user"></i></div>
+                                            <div class="form-group"><input type="text" name="logname1"
+                                                    class="form-style" placeholder="Your User Name" id="logname1"
+                                                    v-model="form.username" autocomplete="off"><i
+                                                    class="input-icon uil uil-user"></i></div>
                                             <div class="form-group mt-2"><input type="password" name="logpass1"
                                                     class="form-style" placeholder="Your Password" id="logpass1"
                                                     v-model="form.password" autocomplete="off"><i
                                                     class="input-icon uil uil-lock-alt"></i></div>
-                                            <div class="form-group mt-2">
-                                                <input class="checkbox2" type="checkbox" id="admin" name="admin" :checked="form.admin"/>
+                                            <div class="form-group mt-2"
+                                                style="display: flex; justify-content: space-evenly;">
+                                                <input class="checkbox2" type="checkbox" id="admin" name="admin"
+                                                    @click="form.admin = !form.admin"/>
                                                 <label for="admin" style="margin-top: 24px;"></label>
-                                                <span>Log in as an Administrator</span>
+                                                <span style="position: relative; top: 18px;">Log in as an
+                                                    Administrator</span>
                                             </div>
-                                            <a class="btn mt-4" @click="login(form)">Log in</a>
-                                            <p class="mb-0 mt-4 text-center"><a href="#0" class="link">Forgot your password?</a></p>
+                                            <a class="btn mt-4" @click="loginImpl(form)">Log in</a>
+                                            <p class="mb-0 mt-4 text-center"><a href="#0" class="link">Forgot your
+                                                    password?</a></p>
                                         </div>
                                     </div>
                                 </div>
@@ -34,14 +38,21 @@
                                     <div class="center-wrap">
                                         <div class="section text-center">
                                             <h4 class="mb-4 pb-3">Sign Up</h4>
-                                            <div class="form-group"><input type="text" name="logname2" class="form-style"
-                                                    placeholder="Your Full Name" id="logname2" v-model="form.username"
-                                                    autocomplete="off"><i class="input-icon uil uil-user"></i></div>
-                                            <div class="form-group mt-2"><input type="password" name="logpass2"
-                                                    class="form-style" placeholder="Your Password" id="logpass2"
-                                                    v-model="form.password" autocomplete="off"><i
-                                                    class="input-icon uil uil-lock-alt"></i></div>
-                                            <a class="btn mt-4" @click="register(form)">Sign up</a>
+                                            <div class="form-group"><input type="text" name="logname2"
+                                                    class="form-style" placeholder="Your Full Name" id="logname2"
+                                                    v-model="form.username" autocomplete="off"><i
+                                                    class="input-icon uil uil-user"></i></div>
+                                            <el-popover title="强度要求" placement="right" :width="200" trigger="hover">
+                                                <template #default>长度至少 8 字符<br>包含数字和字母</template>
+                                                <template #reference>
+                                                    <div class="form-group mt-2"><input type="password" name="logpass2"
+                                                            class="form-style" placeholder="Your Password" id="logpass2"
+                                                            v-model="form.password" autocomplete="off"><i
+                                                            class="input-icon uil uil-lock-alt"></i></div>
+                                                </template>
+                                            </el-popover>
+
+                                            <a class="btn mt-4" @click="registerImpl(form)">Sign up</a>
                                         </div>
                                     </div>
                                 </div>
@@ -58,12 +69,46 @@
 import { reactive } from 'vue';
 
 import { login, register } from '../assets/request'
+import { ElNotification } from 'element-plus'
 
 const form = reactive({
     username: '',
     password: '',
     admin: false
 })
+
+const loginImpl = async (form) => {
+    const res = await login(form)
+    if (res !== 'succuss') {
+        ElNotification({
+            title: '登录失败',
+            message: res,
+            type: 'error',
+        })
+    } else {
+        ElNotification({
+            title: '登录成功',
+            message: "前往用户中心界面",
+            type: 'success',
+        })
+    }
+}
+const registerImpl = async (form) => {
+    const res = await register(form)
+    if (res !== 'succuss') {
+        ElNotification({
+            title: '注册失败',
+            message: res,
+            type: 'error',
+        })
+    } else {
+        ElNotification({
+            title: '注册成功',
+            message: "前往用户中心界面",
+            type: 'success',
+        })
+    }
+}
 </script>
 
 <style scoped lang="scss">
@@ -161,11 +206,11 @@ h6 span {
     position: relative;
     display: block;
     text-align: center;
-    width: 60px;
+    width: 40px;
     height: 16px;
     border-radius: 8px;
     padding: 0;
-    margin: 10px auto;
+    margin: 10px;
     cursor: pointer;
     background-color: #ffeba7
 }
@@ -174,24 +219,23 @@ h6 span {
 .checkbox2:not(:checked)+label:before {
     position: absolute;
     display: block;
-    width: 36px;
-    height: 36px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     color: #ffeba7;
     background-color: #102770;
     font-family: 'unicons';
     content: '\2717';
     z-index: 20;
-    top: -10px;
-    left: -10px;
-    line-height: 36px;
+    top: -3px;
+    left: -5px;
+    line-height: 20px;
     text-align: center;
-    font-size: 24px;
     transition: all .5s ease
 }
 
 .checkbox2:checked+label:before {
-    transform: translateX(44px) ;
+    transform: translateX(30px);
     content: '\2713';
 }
 

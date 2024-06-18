@@ -21,8 +21,9 @@ export const register = async (form: {
     if (result.code == 1) {
         localStorage.setItem('userToken', form.username)
         window.location.href = "/";
+        return result.msg
     } else {
-        alert(result.msg)
+        return result.msg
     }
 }
 
@@ -35,8 +36,9 @@ export const login = async (form: {
     if (result.code == 1) {
         localStorage.setItem('userToken', form.username)
         window.location.href = "/";
+        return result.msg
     } else {
-        alert(result.msg)
+        return result.msg
     }
 }
 
@@ -70,9 +72,9 @@ export const uploadAlgo = async (form:{
     
     const result:Result = (await axios_ins.post("/algos", form)).data
     if (result.code == 1) {
-        return
+        return result.data
     } else {
-        alert(result.msg)
+        return -1
     }
 }
 

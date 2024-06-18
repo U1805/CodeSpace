@@ -13,7 +13,7 @@
             <h2>上传算法库</h2>
         </el-row>
         <el-form :model="form" :rules="rules" ref="ruleFormRef" status-icon>
-            <el-form-item label="*文件上传">
+            <el-form-item label="文件上传" :required="true">
                 <el-upload
                     class="upload-demo"
                     drag
@@ -36,7 +36,7 @@
                     </template>
                 </el-upload>
             </el-form-item>
-            <el-form-item label="*算法库名">
+            <el-form-item label="算法库名" :required="true">
                 <el-input
                     v-model="form.title"
                     placeholder="填写该算法库的名称"
@@ -81,9 +81,17 @@
             <el-form-item label="实现语言">
                 {{ form.language }}
             </el-form-item>
+            <el-form-item label="原创/转载" :required="true">
+                <el-switch v-model="form.origin"
+                style="--el-switch-off-color: #13ce66"
+                inline-prompt
+                active-text="原创"
+                inactive-text="转载"
+                />
+            </el-form-item>
 
             <el-form-item>
-                <el-button type="primary" @click="onSubmit">Create</el-button>
+                <el-button type="primary" @click="onSubmit">上传</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -94,23 +102,40 @@ import { uploadAlgo } from '@/assets/request'
 import { RuleForm, rules } from '@/assets/uploadRule'
 import { FormInstance, UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
 import { reactive, ref } from 'vue'
+import { ElNotification } from 'element-plus'
 
 const tagOptions = [
     {
-        value: 'HTML',
-        label: 'HTML'
+        value: '图论',
+        label: '图论'
     },
     {
-        value: 'CSS',
-        label: 'CSS'
+        value: '动态规划',
+        label: '动态规划'
     },
     {
-        value: 'JavaScript',
-        label: 'JavaScript'
+        value: '排序算法',
+        label: '排序算法'
+    },
+    {
+        value: '贪心算法',
+        label: '贪心算法'
+    },
+    {
+        value: '数据结构',
+        label: '数据结构'
+    },
+    {
+        value: '数学算法',
+        label: '数学算法'
+    },
+    {
+        value: '字符串处理',
+        label: '字符串处理'
     }
 ]
 
-const allow_type = ['html', 'css', 'javascript', 'c', 'cpp', 'cs', 'java', 'py', 'go', 'txt', 'md']
+const allow_type = ['js', 'c', 'cpp', 'cs', 'java', 'py', 'go', 'txt']
 
 const upload = ref<UploadInstance>()
 const handleExceed: UploadProps['onExceed'] = (files) => {
@@ -127,6 +152,14 @@ const handleFileUpload = (file, upload_files) => {
         if (allow_type.findIndex((ele) => ele == ext) != -1) {
             form.language = ext
             countTextFile(file.raw, ext)
+        }else{
+            upload.value!.clearFiles()
+            ElNotification({
+                title: 'Info',
+                dangerouslyUseHTMLString: true,
+                message: '目前不支持该类型实现文件。<br/>支持实现语言：<br/>C、C++、C#、Java、JavaScript、Golang、Python、伪代码',
+                type: 'info',
+            })
         }
     })
 }
@@ -135,6 +168,7 @@ const countTextFile = (file, ext) => {
     const reader = new FileReader()
     reader.onload = () => {
         const content = reader.result as string
+        form.title = file.name.split('.')[0]
         // 这里可以实现文本文件的统计逻辑
         const wordCount = content.split(/\s+/).length
         const charCount = content.length
@@ -152,6 +186,7 @@ const form = reactive<RuleForm>({
     tags: [],
     desc: '',
     line: 0,
+    origin: true,
     language: '无'
 })
 
@@ -160,7 +195,20 @@ const emit = defineEmits(['reflesh'])
 const onSubmit = async () => {
     await ruleFormRef.value.validate(async (valid, fields) => {
         if (valid) {
-            await uploadAlgo(form)
+            const score = await uploadAlgo(form)
+            if (score === -1){
+                ElNotification({
+                    title: 'Error',
+                    message: '上传失败，缺少必要信息',
+                    type: 'error',
+                })
+            }else{
+                ElNotification({
+                    title: 'Success',
+                    message: '上传成功，积分 + ' + score.toString(),
+                    type: 'success',
+                })
+            }
             form.title = ''
             form.content = ''
             form.author = username

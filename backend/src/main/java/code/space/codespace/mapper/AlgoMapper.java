@@ -31,9 +31,9 @@ public interface AlgoMapper {
     @Select("select max(algo_id) from algorithm")
     Integer max_algo_id();
 
-    @Insert("INSERT INTO algorithm (algo_id, title, content, author, `desc`, line, language) " +
-            "VALUES (#{algo_id}, #{title}, #{content}, #{author_id}, #{desc}, #{line}, #{language})")
-    Integer upload(int algo_id, String title, String content, int author_id, String desc, int line, String language);
+    @Insert("INSERT INTO algorithm (algo_id, title, content, author, `desc`, line, language, origin, create_time, update_time) " +
+            "VALUES (#{algo_id}, #{title}, #{content}, #{author_id}, #{desc}, #{line}, #{language}, #{origin}, NOW(), NOW())")
+    Integer upload(int algo_id, String title, String content, int author_id, String desc, int line, String language, boolean origin);
 
     @Select("insert into algorithm_tag(algo_id, tag) value (${algo_id}, '${tag}')")
     Integer upload_tag(int algo_id, String tag);

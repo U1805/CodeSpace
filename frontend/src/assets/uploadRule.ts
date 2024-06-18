@@ -8,6 +8,7 @@ export interface RuleForm {
     tags: string[]
     desc: string
     line: number
+    origin: boolean
     language: string
 }
 

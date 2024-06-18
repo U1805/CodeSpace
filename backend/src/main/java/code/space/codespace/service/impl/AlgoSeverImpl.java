@@ -8,6 +8,8 @@ import code.space.codespace.service.AlgoServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 public class AlgoSeverImpl implements AlgoServer{
     @Autowired
@@ -73,13 +75,23 @@ public class AlgoSeverImpl implements AlgoServer{
                 algo_id=0;
             }
             algoMapper.upload(algo_id+1, uploadInfo.getTitle(), uploadInfo.getContent(), author_id,
-                    uploadInfo.getDesc(), uploadInfo.getLine(), uploadInfo.getLanguage());
+                    uploadInfo.getDesc(), uploadInfo.getLine(), uploadInfo.getLanguage(), uploadInfo.getOrigin());
             String[] tags=uploadInfo.getTags();
             for (int i=0; i<tags.length; i++) {
                 algoMapper.upload_tag(algo_id+1, tags[i]);
             }
-            userMapper.updateScore(uploadInfo.getAuthor());
-            return 1;
+            Map<String, Double> weight = Map.of(
+                    "c", 1.0,
+                    "cpp", 1.1,
+                    "cs", 1.2,
+                    "java", 1.2,
+                    "js", 1.5,
+                    "py", 1.8,
+                    "go", 1.6
+            );
+            int score = (int) (10 + uploadInfo.getLine() * weight.get(uploadInfo.getLanguage()));
+            userMapper.updateScore(uploadInfo.getAuthor(), score);
+            return score;
         }
     }
 }
