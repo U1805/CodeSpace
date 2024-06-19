@@ -1,5 +1,9 @@
 # CodeSpace 项目说明
 
+项目原型：https://app.mockplus.cn/app/kWJISGlJSm/prototype/rKmbwDu63
+
+项目界面：[预览图](./ui_new/1.%20登录.png)
+
 ## log
 
 2024-06-18: 
