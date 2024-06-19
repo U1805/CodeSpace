@@ -5,6 +5,7 @@ import { install as VueMonacoEditorPlugin } from '@guolao/vue-monaco-editor'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import 'element-plus/theme-chalk/dark/css-vars.css' //暗黑模式
 
 import 'vue-code-layout/lib/vue-code-layout.css'
 import CodeLayout from 'vue-code-layout'

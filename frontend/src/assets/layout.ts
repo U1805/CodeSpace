@@ -2,9 +2,10 @@ import { reactive, h } from 'vue'
 import IconFile from '../components/icons/IconFile.vue'
 import IconSearch from '../components/icons/IconSearch.vue'
 import IconUser from '../components/icons/IconUser.vue'
+import IconControl from '../components/icons/IconControl.vue'
 import { CodeLayoutConfig, CodeLayoutInstance, CodeLayoutPanelInternal } from 'vue-code-layout'
 
-function loadLayout(codeLayout: CodeLayoutInstance): CodeLayoutPanelInternal[] {
+function loadLayout(codeLayout: CodeLayoutInstance, isAdmin: boolean): CodeLayoutPanelInternal[] {
     const groupUser = codeLayout.addGroup(
         {
             title: 'User',
@@ -21,6 +22,17 @@ function loadLayout(codeLayout: CodeLayoutInstance): CodeLayoutPanelInternal[] {
             name: 'explorer',
             //   badge: '2',
             iconLarge: () => h(IconFile)
+        },
+        'primarySideBar'
+    )
+    console.log(isAdmin);
+    
+    if (isAdmin) codeLayout.addGroup(
+        {
+            title: 'Control',
+            tooltip: 'Control',
+            name: 'control',
+            iconLarge: () => h(IconControl)
         },
         'primarySideBar'
     )

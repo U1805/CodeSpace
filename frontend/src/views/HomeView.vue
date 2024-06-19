@@ -4,6 +4,7 @@
             <UserInfo
                 v-if="panel.name == 'user' && setTitle('用户中心')"
                 :user-data="userData"
+                :isAdmin="isAdmin"
                 style="height: 100%"
             >
             </UserInfo>
@@ -43,13 +44,18 @@
                     >
                 </div>
             </div>
+            <ControlInfo
+                v-else-if="panel.name == 'control' && setTitle('管理中心')"
+                class="algo_info"
+            >
+            </ControlInfo>
         </template>
         <template #titleBarCenter> {{ title }} </template>
         <template #centerArea>
             <slot name="center1" v-if="title == '用户中心'">
                 <UploadView @reflesh="reflesh"></UploadView>
             </slot>
-            <slot name="center2" v-else>
+            <slot name="center2" v-else-if="title == '算法库'">
                 <SplitLayout
                     ref="splitLayout"
                     @panelClose="onPanelClose"
@@ -68,6 +74,9 @@
                         </div>
                     </template>
                 </SplitLayout>
+            </slot>
+            <slot name="center2" v-else-if="title == '管理中心'">
+                <ControlAlgo :username="currentSelectedUser"></ControlAlgo>
             </slot>
         </template>
         <template #titleBarIcon>
@@ -97,6 +106,8 @@ import {
 import { Close, Search } from '@element-plus/icons-vue'
 import UserInfo from '../components/UserInfo.vue'
 import UploadView from '../components/UploadView.vue'
+import ControlInfo from '../components/ControlInfo.vue'
+import ControlAlgo from '../components/ControlAlgo.vue'
 
 // =====初始化布局=====
 const title = ref<string>('用户中心')
@@ -119,7 +130,8 @@ function loadInnerLayout() {
 }
 onMounted(() => {
     nextTick(async () => {
-        groups.value = loadLayout(codeLayout.value)
+        iden() // 标记用户身份
+        groups.value = loadLayout(codeLayout.value, isAdmin.value)
         const username = localStorage.getItem('username')
         userData.value = await getUser(username)
         setBadge(userData.value.repo.toString())
@@ -132,6 +144,17 @@ const userData = ref<User>()
 const keyword = ref<string>()
 const currentSelectd = ref()
 const algoData = ref<Algo[]>()
+const isAdmin = ref<boolean>(false)
+const currentSelectedUser = ref<string>() //  管理界面选中的用户
+
+const iden = () => {
+    isAdmin.value = localStorage.getItem('userToken').startsWith('aw')
+}
+
+const setCurrentUser = (username:string)=>{
+    currentSelectedUser.value = username 
+}
+provide("setUser", setCurrentUser)
 
 const showBottom = (flag: boolean) => {
     config.bottomPanel = flag
@@ -193,7 +216,7 @@ const reflesh = async () => {
     algoData.value = await search('', username)
 }
 
-provide("reflesh", reflesh)
+provide('reflesh', reflesh)
 
 watch(keyword, async (newValue, oldValue) => {
     if (newValue == '') {
@@ -248,4 +271,11 @@ watch(keyword, async (newValue, oldValue) => {
     --el-fill-color-light: #04395e;
     --el-fill-color: #04395e;
 }
+
+html.dark {
+  /* 自定义深色背景颜色 */
+  --el-color-danger-light-9: #FEF0F0;
+  --el-border-color: #31547b;
+}
+
 </style>

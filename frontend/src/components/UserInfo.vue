@@ -32,7 +32,13 @@
                 <div class="pic">
                     <img :src="userData ? userData['avatar'] : default_img" />
                 </div>
-                <div class="name">{{ userData ? userData['username'] : 'username' }}</div>
+                <div class="name" style="position: relative; width: 100%; display: flex; justify-content: center">
+                    <div style="position: relative; width: fit-content;">
+                        <span>{{ userData ? userData['username'] : 'username' }}</span>
+                        <el-tag type="danger" size="small" v-show="isAdmin" 
+                            style="position: absolute; top: 0; right: -50px;">管理员</el-tag>
+                    </div>
+                </div>
                 <div class="tag">{{ userData ? userData['email'] : '123456@email.com' }}</div>
             </div>
         </div>
@@ -65,7 +71,8 @@ const dialog = ref(false)
 const loading = ref(false)
 
 const props = defineProps({
-    userData: Object
+    userData: Object,
+    isAdmin: Boolean
 })
 const default_img = ref<string>('https://img.icons8.com/?size=256&id=tZuAOUGm9AuS&format=png')
 

@@ -6,10 +6,9 @@ import code.space.codespace.service.UserServer;
 import jakarta.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -17,8 +16,8 @@ public class UserController {
     @Autowired
     private UserServer userServer;
 
-    @GetMapping("/users")
-    public Result info(@PathParam("username") String username){
+    @GetMapping("/users/{username}")
+    public Result info(@PathVariable("username") String username){
         log.info(username);
         User user = userServer.info(username);
         if (user==null) {
@@ -27,6 +26,12 @@ public class UserController {
         else {
             return Result.success(user);
         }
+    }
+
+    @GetMapping("/users/all")
+    public Result getAll(){
+        List<User> users = userServer.getList();
+        return Result.success(users);
     }
 
     @PutMapping("/users")
@@ -38,5 +43,13 @@ public class UserController {
         }catch (Exception e) {
             return Result.error("编辑信息错误");
         }
+    }
+
+    @DeleteMapping("/users/{username}")
+    public Result delete(@PathVariable("username") String username){
+        User user = userServer.info(username);
+        if (user == null) return Result.error("用户不存在");
+        userServer.delete(username);
+        return Result.success();
     }
 }

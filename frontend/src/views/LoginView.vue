@@ -79,33 +79,33 @@ const form = reactive({
 
 const loginImpl = async (form) => {
     const res = await login(form)
-    if (res !== 'succuss') {
-        ElNotification({
-            title: '登录失败',
-            message: res,
-            type: 'error',
-        })
-    } else {
+    if (res === 'success') {
         ElNotification({
             title: '登录成功',
             message: "前往用户中心界面",
             type: 'success',
         })
+    } else {
+        ElNotification({
+            title: '登录失败',
+            message: res,
+            type: 'error',
+        })
     }
 }
 const registerImpl = async (form) => {
     const res = await register(form)
-    if (res !== 'succuss') {
-        ElNotification({
-            title: '注册失败',
-            message: res,
-            type: 'error',
-        })
-    } else {
+    if (res === 'success') {
         ElNotification({
             title: '注册成功',
             message: "前往用户中心界面",
             type: 'success',
+        })
+    } else {
+        ElNotification({
+            title: '注册失败',
+            message: res,
+            type: 'error',
         })
     }
 }

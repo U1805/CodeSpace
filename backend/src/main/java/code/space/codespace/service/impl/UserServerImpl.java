@@ -6,6 +6,8 @@ import code.space.codespace.service.UserServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServerImpl implements UserServer {
     @Autowired
@@ -13,21 +15,21 @@ public class UserServerImpl implements UserServer {
 
     @Override
     public User info(String username) {
-        User user = userMapper.search(username);
-        if (user == null) {
-            return null;
-        }
-        else {
-            Integer repo = userMapper.count_algo(username);
-            user.setRepo(repo != null?repo:0);
-            Integer line = userMapper.count_line(username);
-            user.setLine(line != null?line:0);
-            return user;
-        }
+        return userMapper.getUserInfo(username);
     }
 
     @Override
     public void edit(User user) {
         userMapper.setInfo(user);
+    }
+
+    @Override
+    public List<User> getList() {
+        return userMapper.getList();
+    }
+
+    @Override
+    public void delete(String username) {
+        userMapper.delete(username);
     }
 }
