@@ -12,6 +12,7 @@ class CodeSpaceApplicationTests {
     private AlgoMapper algoMapper;
     @Test
     void contextLoads() {
-        algoMapper.searchByKeyword("quick", "");
+//        algoMapper.searchByKeyword("quick", "");
+        algoMapper.searchById(13);
     }
 }

@@ -89,7 +89,6 @@
                 inactive-text="转载"
                 />
             </el-form-item>
-
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">上传</el-button>
             </el-form-item>

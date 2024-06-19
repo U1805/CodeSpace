@@ -11,4 +11,6 @@ public interface AlgoServer {
     Integer upload(UploadInfo uploadInfo);
 
     Boolean delete(Integer id);
+
+    void edit(Algorithm algorithm);
 }

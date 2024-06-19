@@ -74,6 +74,7 @@ export const uploadAlgo = async (form: {
     line: number
     language: string
     desc: string
+    origin: boolean
     tags: string[]
 }) => {
     console.log(form)
@@ -111,6 +112,25 @@ export const deleteAlgo = async (id: number) => {
     const result: Result = (await axios_ins.delete(`/algos/${id}`)).data
 
     console.log(result)
+    if (result.code == 1) {
+        return result.msg
+    } else {
+        return result.msg
+    }
+}
+
+export const updateAlgo = async (form: {
+    id: number
+    title: string
+    content: string
+    line: number
+    desc: string
+    origin: boolean
+    tags: string[]
+}) => {
+    console.log(form)
+
+    const result: Result = (await axios_ins.put('/algos', form)).data
     if (result.code == 1) {
         return result.msg
     } else {

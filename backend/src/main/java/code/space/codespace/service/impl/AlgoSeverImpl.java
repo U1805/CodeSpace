@@ -18,6 +18,16 @@ public class AlgoSeverImpl implements AlgoServer{
     @Autowired
     private UserMapper userMapper;
 
+    private Map<String, Double> weight = Map.of(
+            "c", 1.0,
+            "cpp", 1.1,
+            "cs", 1.2,
+            "java", 1.2,
+            "js", 1.5,
+            "py", 1.8,
+            "go", 1.6
+    );
+
     @Override
     public List<Algorithm> info(String keyword, String author) {
         List<Algorithm> algorithms = algoMapper.searchByKeyword(keyword, author);
@@ -58,15 +68,6 @@ public class AlgoSeverImpl implements AlgoServer{
             }
 
             // Calculate and update user score
-            Map<String, Double> weight = Map.of(
-                    "c", 1.0,
-                    "cpp", 1.1,
-                    "cs", 1.2,
-                    "java", 1.2,
-                    "js", 1.5,
-                    "py", 1.8,
-                    "go", 1.6
-            );
             int score = (int) (10 + uploadInfo.getLine() * weight.getOrDefault(uploadInfo.getLanguage(), 1.0));
             userMapper.updateScore(uploadInfo.getAuthor(), score);
 
@@ -76,9 +77,24 @@ public class AlgoSeverImpl implements AlgoServer{
 
     @Override
     public Boolean delete(Integer id) {
-        Integer num = algoMapper.searchById(id);
-        if (num == 0) return false;
+        Algorithm[] algo = algoMapper.searchById(id);
+        if (algo.length == 0) return false;
+        int score = (int) (10 + algo[0].getLine() * weight.getOrDefault(algo[0].getLanguage(), 1.0));
+        userMapper.updateScore(algo[0].getAuthor(), -score);
         algoMapper.delete(id);
         return true;
+    }
+
+    @Override
+    public void edit(Algorithm algorithm) {
+        Integer res = algoMapper.setInfo(algorithm);
+        if (res > 0){
+            Integer algoId = algorithm.getId();
+            algoMapper.deleteTagById(algoId);
+            List<String> tags = algorithm.getTags();
+            for (String tag : tags) {
+                algoMapper.uploadTag(algoId, tag);
+            }
+        }
     }
 }

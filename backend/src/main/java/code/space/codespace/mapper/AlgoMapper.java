@@ -25,8 +25,19 @@ public interface AlgoMapper {
     List<Algorithm> searchByKeyword(String keyword, String username);
 
     @Select("select count(*) from algorithm where algo_id = #{id}")
-    Integer searchById(Integer id);
+    Integer countById(Integer id);
 
     @Delete("delete from algorithm where algo_id = #{id}")
     void delete(Integer id);
+
+    @Update("update algorithm set title=#{title}, content=#{content}, line=#{line}, `desc`=#{desc}, origin=#{origin}, update_time=NOW() " +
+            "where algo_id=#{id}")
+    Integer setInfo(Algorithm algorithm);
+
+    @Select("select a.algo_id AS id, a.title, u.username AS author, a.content, a.line, " +
+            "a.language, a.`desc`, a.origin from algorithm a join `user` u ON a.author = u.user_id where a.algo_id = #{id}")
+    Algorithm[] searchById(Integer id);
+
+    @Delete("delete from algorithm_tag where algo_id=#{algoId}")
+    void deleteTagById(Integer algoId);
 }

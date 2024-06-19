@@ -47,4 +47,15 @@ public class AlgoController {
         if (res) return Result.success();
         else return Result.error("算法库不存在");
     }
+
+    @PutMapping("/algos")
+    public Result edit(@RequestBody Algorithm algorithm){
+        if (algorithm.getTitle() == "") return Result.error("编辑信息错误：标题为空");
+        try {
+            algoServer.edit(algorithm);
+            return Result.success();
+        }catch (Exception e) {
+            return Result.error("编辑信息错误");
+        }
+    }
 }

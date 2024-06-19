@@ -1,4 +1,6 @@
 <template>
+    <UpdateAlgo v-model="dialog" :algoEdit="algoEdit"></UpdateAlgo>
+    
     <el-table :data="tableData" style="width: 100%">
       <el-table-column label="算法名" width="140">
         <template #default="scope">
@@ -56,17 +58,15 @@
   </template>
 
 <script setup lang="ts">
+import UpdateAlgo from '../components/UpdateAlgo.vue'
 import { Algo } from '@/assets/interface';
 import { deleteAlgo, search } from '@/assets/request';
 import { Timer } from '@element-plus/icons-vue'
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, provide, ref, watch } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 const props = defineProps(["username"])
 
-const handleEdit = (row: Algo) => {
-  console.log(row.id)
-}
 const handleDelete = (row: Algo) => {    
     ElMessageBox.confirm('删除算法库的操作不可逆，是否继续？', 'Warning', {
         confirmButtonText: '确定',
@@ -106,4 +106,20 @@ watch(props, async (newValue, oldValue) => {
     console.log(newValue.username);
     tableData.value = await search("", newValue.username)
 })
+
+const dialog = ref(false)
+const algoEdit = ref<Algo>()
+const handleEdit = (algo: Algo) => {
+    algoEdit.value = algo
+    dialog.value = true
+}
+
+const setDialog = (flag: boolean) => {
+    dialog.value = flag
+}
+provide('setDialog', setDialog)
+const reflesh = async ()=>{
+    tableData.value = await search("", props.username)
+}
+provide("reflesh", reflesh)
 </script>

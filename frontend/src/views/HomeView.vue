@@ -1,4 +1,6 @@
 <template>
+    <UpdateAlgo v-model="dialog" :algoEdit="algoEdit"></UpdateAlgo>
+
     <CodeLayout ref="codeLayout" :layout-config="config" :main-menu-config="menuData">
         <template #panelRender="{ panel }">
             <UserInfo
@@ -17,13 +19,31 @@
                 />
             </div>
             <div v-else-if="panel.name == 'explorer.algorithms' && setTitle('算法库')">
-                <div v-for="repo in algoData" class="repo" @click="openFile(repo)" style="display: flex; justify-content: space-between;">
+                <div
+                    v-for="repo in algoData"
+                    class="repo"
+                    @click="openFile(repo)"
+                    style="display: flex; justify-content: space-between"
+                >
                     <span>
                         <el-icon :size="15"><Collection /></el-icon>
                         <span style="font-size: 15px; margin: 5px">{{ repo['title'] }}</span>
                         <el-tag>{{ repo['author'] }}</el-tag>
                     </span>
-                    <el-button v-if="repo['author']==userData.username" @click="handleDelete(repo)">删除</el-button>
+                    <span>
+                        <el-button
+                            v-if="repo['author'] == userData.username"
+                            @click="handleEdit(repo)"
+                            @click.stop=""
+                            >编辑</el-button
+                        >
+                        <el-button
+                            v-if="repo['author'] == userData.username"
+                            @click="handleDelete(repo)"
+                            @click.stop=""
+                            >删除</el-button
+                        >
+                    </span>
                 </div>
             </div>
             <div v-else-if="panel.name == 'explorer.info' && setTitle('算法库')" class="algo_info">
@@ -43,8 +63,14 @@
                     <el-row
                         ><el-col :span="4">算法标签</el-col
                         ><el-col :span="20">
-                            <el-tag style="margin-right: 10px">{{ currentSelectd['origin']?"原创":"转载" }}</el-tag>
-                            <el-tag style="margin-right: 10px" v-for="tag in currentSelectd['tags']">{{ tag }}</el-tag>
+                            <el-tag style="margin-right: 10px">{{
+                                currentSelectd['origin'] ? '原创' : '转载'
+                            }}</el-tag>
+                            <el-tag
+                                style="margin-right: 10px"
+                                v-for="tag in currentSelectd['tags']"
+                                >{{ tag }}</el-tag
+                            >
                         </el-col>
                     </el-row>
                     <el-row
@@ -119,6 +145,7 @@ import {
 import { Close, Search } from '@element-plus/icons-vue'
 import UserInfo from '../components/UserInfo.vue'
 import UploadView from '../components/UploadView.vue'
+import UpdateAlgo from '../components/UpdateAlgo.vue'
 import ControlInfo from '../components/ControlInfo.vue'
 import ControlAlgo from '../components/ControlAlgo.vue'
 
@@ -164,10 +191,10 @@ const iden = () => {
     isAdmin.value = localStorage.getItem('userToken').startsWith('aw')
 }
 
-const setCurrentUser = (username:string)=>{
-    currentSelectedUser.value = username 
+const setCurrentUser = (username: string) => {
+    currentSelectedUser.value = username
 }
-provide("setUser", setCurrentUser)
+provide('setUser', setCurrentUser)
 
 const showBottom = (flag: boolean) => {
     config.bottomPanel = flag
@@ -206,7 +233,7 @@ const openFile = (repo) => {
     file_opened.value++
     currentSelectd.value = repo
 }
-const onPanelClose = (panel: CodeLayoutPanelInternal, resolve: () => void) => {    
+const onPanelClose = (panel: CodeLayoutPanelInternal, resolve: () => void) => {
     if (file_opened.value > 1) {
         resolve()
         file_opened.value--
@@ -227,7 +254,12 @@ const reflesh = async () => {
     const username = localStorage.getItem('username')
     userData.value = await getUser(username)
     setBadge(userData.value.repo.toString())
-    algoData.value = await search('', username)
+    if (keyword.value) {
+        algoData.value = await search(keyword.value, '')
+    } else {
+        const username = localStorage.getItem('username')
+        algoData.value = await search('', username)
+    }
 }
 
 provide('reflesh', reflesh)
@@ -242,7 +274,7 @@ watch(keyword, async (newValue, oldValue) => {
 })
 
 // 算法库删除与编辑操作
-const handleDelete = (algo: Algo) => {    
+const handleDelete = (algo: Algo) => {
     ElMessageBox.confirm('删除算法库的操作不可逆，是否继续？', 'Warning', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -255,19 +287,13 @@ const handleDelete = (algo: Algo) => {
                     type: 'success',
                     message: '删除成功'
                 })
-            }else{
+            } else {
                 ElMessage({
                     type: 'error',
-                    message: res,
+                    message: res
                 })
             }
-            if (keyword.value) {
-                algoData.value = await search(keyword.value, '')
-            } else {
-                const username = localStorage.getItem('username')
-                algoData.value = await search('', username)
-            }
-
+            reflesh()
         })
         .catch(() => {
             ElMessage({
@@ -276,6 +302,22 @@ const handleDelete = (algo: Algo) => {
             })
         })
 }
+
+const dialog = ref(false)
+const algoEdit = ref<Algo>()
+const handleEdit = (algo: Algo) => {
+    algoEdit.value = algo
+    dialog.value = true
+}
+
+const setDialog = (flag: boolean) => {
+    dialog.value = flag
+}
+provide('setDialog', setDialog)
+const setCurrentAlgo = (algo: Algo) => {
+    currentSelectd.value = algo
+}
+provide("setCurrentAlgo", setCurrentAlgo)
 </script>
 
 <style lang="scss">
@@ -323,9 +365,8 @@ const handleDelete = (algo: Algo) => {
 }
 
 html.dark {
-  /* 自定义深色背景颜色 */
-  --el-color-danger-light-9: #FEF0F0;
-  --el-border-color: #31547b;
+    /* 自定义深色背景颜色 */
+    --el-color-danger-light-9: #fef0f0;
+    --el-border-color: #31547b;
 }
-
 </style>
