@@ -19,11 +19,11 @@
             <div v-else-if="panel.name == 'explorer.algorithms' && setTitle('算法库')">
                 <div v-for="repo in algoData" class="repo" @click="openFile(repo)" style="display: flex; justify-content: space-between;">
                     <span>
-                    <el-icon :size="15"><Collection /></el-icon>
-                    <span style="font-size: 15px; margin: 5px">{{ repo['title'] }}</span>
-                    <el-tag>{{ repo['author'] }}</el-tag>
+                        <el-icon :size="15"><Collection /></el-icon>
+                        <span style="font-size: 15px; margin: 5px">{{ repo['title'] }}</span>
+                        <el-tag>{{ repo['author'] }}</el-tag>
                     </span>
-                    <el-button v-if="repo['author']==userData.username">删除</el-button>
+                    <el-button v-if="repo['author']==userData.username" @click="handleDelete(repo)">删除</el-button>
                 </div>
             </div>
             <div v-else-if="panel.name == 'explorer.info' && setTitle('算法库')" class="algo_info">
@@ -186,8 +186,9 @@ const setTitle = (new_title: string) => {
 
 import IconMarkdown from '../components/icons/IconMarkdown.vue'
 import { Algo, User } from '../assets/interface'
-import { getUser, search } from '@/assets/request'
+import { deleteAlgo, getUser, search } from '@/assets/request'
 import router from '@/router'
+import { ElMessage, ElMessageBox } from 'element-plus'
 const file_opened = ref(0)
 const file_cnt = ref(0)
 const openFile = (repo) => {
@@ -205,7 +206,7 @@ const openFile = (repo) => {
     file_opened.value++
     currentSelectd.value = repo
 }
-const onPanelClose = (panel: CodeLayoutPanelInternal, resolve: () => void) => {
+const onPanelClose = (panel: CodeLayoutPanelInternal, resolve: () => void) => {    
     if (file_opened.value > 1) {
         resolve()
         file_opened.value--
@@ -239,6 +240,42 @@ watch(keyword, async (newValue, oldValue) => {
         algoData.value = await search(keyword.value, '')
     }
 })
+
+// 算法库删除与编辑操作
+const handleDelete = (algo: Algo) => {    
+    ElMessageBox.confirm('删除算法库的操作不可逆，是否继续？', 'Warning', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    })
+        .then(async () => {
+            const res = await deleteAlgo(algo.id)
+            if (res === 'success') {
+                ElMessage({
+                    type: 'success',
+                    message: '删除成功'
+                })
+            }else{
+                ElMessage({
+                    type: 'error',
+                    message: res,
+                })
+            }
+            if (keyword.value) {
+                algoData.value = await search(keyword.value, '')
+            } else {
+                const username = localStorage.getItem('username')
+                algoData.value = await search('', username)
+            }
+
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: '取消删除'
+            })
+        })
+}
 </script>
 
 <style lang="scss">
