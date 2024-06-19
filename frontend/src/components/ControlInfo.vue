@@ -9,7 +9,9 @@
                 <el-button link type="primary" size="small" @click="setUserImpl(scope.$index)"
                     >Detail</el-button
                 >
-                <el-button link type="danger" size="small" @click="deleteUserImpl(scope.$index)">Delete</el-button>
+                <el-button link type="danger" size="small" @click="deleteUserImpl(scope.$index)"
+                    >Delete</el-button
+                >
             </template>
         </el-table-column>
     </el-table>
@@ -26,11 +28,11 @@ const setUserImpl = (index: number) => {
     setUser(tableData.value[index].username)
 }
 
-const deleteUserImpl = async (index: number) => {    
+const deleteUserImpl = async (index: number) => {
     if (tableData.value[index].username == 'admin') {
         ElMessage({
             type: 'error',
-            message: '管理员用户不可删除',
+            message: '管理员用户不可删除'
         })
         return
     }
@@ -46,10 +48,10 @@ const deleteUserImpl = async (index: number) => {
                     type: 'success',
                     message: '删除成功'
                 })
-            }else{
+            } else {
                 ElMessage({
                     type: 'error',
-                    message: res,
+                    message: res
                 })
             }
             tableData.value = await getAllUser()

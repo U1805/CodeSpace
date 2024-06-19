@@ -105,6 +105,7 @@
                         <div @click="currentSelectd = panel.data.repo" style="height: 100%">
                             <vue-monaco-editor
                                 v-model:value="panel.data.value"
+                                @change="editFile(panel)"
                                 :language="panel.data.language"
                                 :path="panel.data.path"
                                 theme="vs-dark"
@@ -133,7 +134,16 @@
 
 <script setup lang="ts">
 import { loadLayout, config, menuData } from '@/assets/layout'
-import { ref, onMounted, nextTick, h, watch, provide } from 'vue'
+import {
+    ref,
+    onMounted,
+    nextTick,
+    h,
+    watch,
+    provide,
+    onUnmounted,
+    reactive
+} from 'vue'
 import {
     CodeLayout,
     SplitLayout,
@@ -186,6 +196,7 @@ const currentSelectd = ref()
 const algoData = ref<Algo[]>()
 const isAdmin = ref<boolean>(false)
 const currentSelectedUser = ref<string>() //  管理界面选中的用户
+const username = ref<string>(localStorage.getItem('username'))
 
 const iden = () => {
     isAdmin.value = localStorage.getItem('userToken').startsWith('aw')
@@ -213,25 +224,40 @@ const setTitle = (new_title: string) => {
 
 import IconMarkdown from '../components/icons/IconMarkdown.vue'
 import { Algo, User } from '../assets/interface'
-import { deleteAlgo, getUser, search } from '@/assets/request'
+import { deleteAlgo, getUser, search, updateAlgo } from '@/assets/request'
 import router from '@/router'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 const file_opened = ref(0)
 const file_cnt = ref(0)
+const file_name = ref('')
 const openFile = (repo) => {
-    if (split.value.children.findIndex((panel) => panel.data.repo == repo) != -1) return
+    currentSelectd.value = repo
+    const index = split.value.children.findIndex((panel) => panel.data.repo == repo)
+    if (index != -1) {
+        // 如果已经打开过了
+        split.value.children[index].activeSelf()
+        file_name.value = split.value.children[index].name
+        currentFileContent.value = split.value.children[index].data.value
+        return
+    }
 
+    file_name.value = 'file' + file_cnt.value++
     const t = split.value.addPanel({
         title: repo['title'],
-        name: 'file' + file_cnt.value++,
+        name: file_name.value,
         iconSmall: () => h(IconMarkdown),
-        data: { value: repo['content'], language: repo['language'], repo: repo },
+        data: {
+            value: repo['content'],
+            language: repo['language'],
+            repo: repo,
+            name: file_name.value
+        },
         closeType: 'close'
     })
 
     t.activeSelf()
     file_opened.value++
-    currentSelectd.value = repo
+    currentFileContent.value = repo['content']
 }
 const onPanelClose = (panel: CodeLayoutPanelInternal, resolve: () => void) => {
     if (file_opened.value > 1) {
@@ -242,6 +268,8 @@ const onPanelClose = (panel: CodeLayoutPanelInternal, resolve: () => void) => {
 const onPanelClick = () => {
     // 点击标签切换算法信息
     currentSelectd.value = split.value.activePanel.data.repo
+    file_name.value = split.value.activePanel.data.name
+    currentFileContent.value = currentSelectd.value.content
 }
 
 const logout = () => {
@@ -251,14 +279,12 @@ const logout = () => {
 }
 
 const reflesh = async () => {
-    const username = localStorage.getItem('username')
-    userData.value = await getUser(username)
+    userData.value = await getUser(username.value)
     setBadge(userData.value.repo.toString())
     if (keyword.value) {
         algoData.value = await search(keyword.value, '')
     } else {
-        const username = localStorage.getItem('username')
-        algoData.value = await search('', username)
+        algoData.value = await search('', username.value)
     }
 }
 
@@ -266,8 +292,7 @@ provide('reflesh', reflesh)
 
 watch(keyword, async (newValue, oldValue) => {
     if (newValue == '') {
-        const username = localStorage.getItem('username')
-        algoData.value = await search('', username)
+        algoData.value = await search('', username.value)
     } else {
         algoData.value = await search(keyword.value, '')
     }
@@ -317,7 +342,61 @@ provide('setDialog', setDialog)
 const setCurrentAlgo = (algo: Algo) => {
     currentSelectd.value = algo
 }
-provide("setCurrentAlgo", setCurrentAlgo)
+provide('setCurrentAlgo', setCurrentAlgo)
+
+// 编辑文本框的内容
+const currentFileContent = ref()
+const editFile = (panel) => {
+    currentFileContent.value = panel.data.value
+
+    if (currentSelectd.value.author == username.value) {
+        // 只能修改自己的文件
+        const file = splitLayout.value.getPanelByName(panel.data.name)
+        if (panel.data.repo.content !== panel.data.value) file.closeType = 'unSave'
+        else file.closeType = 'close'
+    }
+}
+
+const handleKeyPress = async (event) => {
+    const reactiveFile = ref(splitLayout.value.getPanelByName(file_name.value)) // 设置为响应式对象
+    // 检查是否按下了 Ctrl+S （keyCode为83，同时按下Ctrl键）
+    if (event.keyCode === 83 && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault()
+        if (reactiveFile.value.closeType !== 'unSave') return // 没有修改的不保存
+        if (currentSelectd.value.author !== username.value) return // 只能保存自己的文件
+        const algoForm = reactive({
+            id: currentSelectd.value.id,
+            title: currentSelectd.value.title,
+            content: currentFileContent.value,
+            line: currentFileContent.value.split(/\n/).length,
+            desc: currentSelectd.value.desc,
+            origin: currentSelectd.value.origin,
+            tags: currentSelectd.value.tags
+        })
+        const res = await updateAlgo(algoForm)
+        if (res === 'success') {
+            reactiveFile.value.closeType = 'close'
+            await nextTick() // 用响应式对象的强制刷新
+            ElNotification({
+                title: '保存成功',
+                message: '算法库编辑成功',
+                type: 'success'
+            })
+        } else {
+            ElNotification({
+                title: '保存出错啦',
+                message: res,
+                type: 'error'
+            })
+        }
+    }
+}
+onMounted(() => {
+    window.addEventListener('keydown', handleKeyPress)
+})
+onUnmounted(() => {
+    window.removeEventListener('keydown', handleKeyPress)
+})
 </script>
 
 <style lang="scss">
