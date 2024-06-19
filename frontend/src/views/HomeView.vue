@@ -106,7 +106,7 @@
                             <vue-monaco-editor
                                 v-model:value="panel.data.value"
                                 @change="editFile(panel)"
-                                :language="panel.data.language"
+                                :language="languageTable[panel.data.language]"
                                 :path="panel.data.path"
                                 theme="vs-dark"
                                 :options="MONACO_EDITOR_OPTIONS"
@@ -197,6 +197,16 @@ const algoData = ref<Algo[]>()
 const isAdmin = ref<boolean>(false)
 const currentSelectedUser = ref<string>() //  管理界面选中的用户
 const username = ref<string>(localStorage.getItem('username'))
+const languageTable = {
+    "c": "c",
+    "cpp": "cpp",
+    "cs": "cs",
+    "js": "javascript",
+    "py": "python",
+    "go": "go",
+    "txt": "txt",
+    "java": "java"
+}
 
 const iden = () => {
     isAdmin.value = localStorage.getItem('userToken').startsWith('aw')
