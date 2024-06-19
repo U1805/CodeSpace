@@ -58,7 +58,7 @@ function loadLayout(codeLayout: CodeLayoutInstance, isAdmin: boolean): CodeLayou
       name: 'explorer.info',
       noHide: true,
       startOpen: true,
-      size: 180
+      size: 240
     });
 
     const bottomGroup = codeLayout.getRootGrid('bottomPanel')

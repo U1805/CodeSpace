@@ -16,7 +16,7 @@
     </resultMap>
     <select id="searchByKeyword" resultMap="AlgorithmResultMap">
         SELECT a.algo_id AS id, a.title, u.username AS author, a.content, a.line,
-        a.language, a.`desc`, a.origin, GROUP_CONCAT(at.tag SEPARATOR ',') AS tags
+        a.language, a.`desc`, a.origin, GROUP_CONCAT(at.tag SEPARATOR ',') AS tags, a.create_time, a.update_time
         FROM algorithm a JOIN `user` u ON a.author = u.user_id LEFT JOIN algorithm_tag at ON a.algo_id = at.algo_id
         WHERE (a.title LIKE CONCAT('%', #{keyword}, '%') OR at.tag LIKE CONCAT('%', #{keyword}, '%'))
         <if test='username != null and username != ""'>

@@ -17,9 +17,13 @@
                 />
             </div>
             <div v-else-if="panel.name == 'explorer.algorithms' && setTitle('算法库')">
-                <div v-for="repo in algoData" class="repo" @click="openFile(repo)">
+                <div v-for="repo in algoData" class="repo" @click="openFile(repo)" style="display: flex; justify-content: space-between;">
+                    <span>
                     <el-icon :size="15"><Collection /></el-icon>
-                    <span style="font-size: 15px; margin-left: 5px">{{ repo['title'] }}</span>
+                    <span style="font-size: 15px; margin: 5px">{{ repo['title'] }}</span>
+                    <el-tag>{{ repo['author'] }}</el-tag>
+                    </span>
+                    <el-button v-if="repo['author']==userData.username">删除</el-button>
                 </div>
             </div>
             <div v-else-if="panel.name == 'explorer.info' && setTitle('算法库')" class="algo_info">
@@ -38,9 +42,18 @@
                     >
                     <el-row
                         ><el-col :span="4">算法标签</el-col
-                        ><el-col :span="20">{{
-                            currentSelectd['tags'].length ? currentSelectd['tags'].join(', ') : ''
-                        }}</el-col></el-row
+                        ><el-col :span="20">
+                            <el-tag style="margin-right: 10px">{{ currentSelectd['origin']?"原创":"转载" }}</el-tag>
+                            <el-tag style="margin-right: 10px" v-for="tag in currentSelectd['tags']">{{ tag }}</el-tag>
+                        </el-col>
+                    </el-row>
+                    <el-row
+                        ><el-col :span="4">创建时间</el-col
+                        ><el-col :span="20">{{ currentSelectd['createTime'] }}</el-col></el-row
+                    >
+                    <el-row
+                        ><el-col :span="4">修改时间</el-col
+                        ><el-col :span="20">{{ currentSelectd['updateTime'] }}</el-col></el-row
                     >
                 </div>
             </div>

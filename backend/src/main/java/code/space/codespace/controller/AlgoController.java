@@ -27,7 +27,6 @@ public class AlgoController {
         if (algorithm==null) {
             return Result.error("No algorithms.");
         }
-        log.info(algorithm.toString());
         return Result.success(algorithm);
     }
 

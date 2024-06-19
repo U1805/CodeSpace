@@ -22,5 +22,7 @@ export interface Algo{
     language: string,
     desc: string,
     origin: boolean,
-    tags: string[]
+    tags: string[],
+    createTime: string,
+    updateTime: string
 }
