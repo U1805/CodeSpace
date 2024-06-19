@@ -1,0 +1,6 @@
+<configuration>
+    <typeHandlers>
+        <!-- 注册自定义的 TypeHandler -->
+        <typeHandler handler="code.space.codespace.mapper.StringListTypeHandler"/>
+    </typeHandlers>
+</configuration>

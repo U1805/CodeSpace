@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @Slf4j
 public class AlgoController {
@@ -21,10 +23,11 @@ public class AlgoController {
             return Result.error("Without keyword or author.");
         }
 
-        Algorithm[]  algorithm = algoServer.info(keyword, author);
+        List<Algorithm> algorithm = algoServer.info(keyword, author);
         if (algorithm==null) {
             return Result.error("No algorithms.");
         }
+        log.info(algorithm.toString());
         return Result.success(algorithm);
     }
 
@@ -37,5 +40,12 @@ public class AlgoController {
         else{
             return Result.success(res);
         }
+    }
+
+    @DeleteMapping("/algos/{id}")
+    public Result delete(@PathVariable("id") Integer id){
+        Boolean res = algoServer.delete(id);
+        if (res) return Result.success();
+        else return Result.error("算法库不存在");
     }
 }

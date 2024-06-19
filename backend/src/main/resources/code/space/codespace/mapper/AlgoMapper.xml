@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="code.space.codespace.mapper.AlgoMapper">
+    <resultMap id="AlgorithmResultMap" type="code.space.codespace.pojo.Algorithm">
+        <id property="id" column="id" />
+        <result property="title" column="title" />
+        <result property="author" column="author" />
+        <result property="content" column="content" />
+        <result property="line" column="line" />
+        <result property="language" column="language" />
+        <result property="desc" column="desc" />
+        <result property="origin" column="origin" />
+        <result property="tags" column="tags" javaType="java.util.List" typeHandler="code.space.codespace.mapper.StringListTypeHandler" />
+    </resultMap>
+    <select id="searchByKeyword" resultMap="AlgorithmResultMap">
+        SELECT a.algo_id AS id, a.title, u.username AS author, a.content, a.line,
+        a.language, a.`desc`, a.origin, GROUP_CONCAT(at.tag SEPARATOR ',') AS tags
+        FROM algorithm a JOIN `user` u ON a.author = u.user_id LEFT JOIN algorithm_tag at ON a.algo_id = at.algo_id
+        WHERE (a.title LIKE CONCAT('%', #{keyword}, '%') OR at.tag LIKE CONCAT('%', #{keyword}, '%'))
+        <if test='username != null and username != ""'>
+            and u.username = #{username}
+        </if>
+        GROUP BY a.algo_id
+    </select>
+</mapper>

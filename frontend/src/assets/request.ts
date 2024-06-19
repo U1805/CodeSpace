@@ -92,6 +92,8 @@ export const search = async (keyword: string, username: string) => {
         author: username
     }
     const result: Result = (await axios_ins.get('/algos', { params })).data
+    console.log(result);
+    
     if (result.code == 1) {
         return result.data
     } else {
@@ -103,4 +105,15 @@ export const editInfo = async (form: { username: string; avatar: string; email: 
     console.log(form)
     const result: Result = (await axios_ins.put('/users', form)).data
     return result.msg
+}
+
+export const deleteAlgo = async (id: number) => {
+    const result: Result = (await axios_ins.delete(`/algos/${id}`)).data
+
+    console.log(result)
+    if (result.code == 1) {
+        return result.msg
+    } else {
+        return result.msg
+    }
 }
