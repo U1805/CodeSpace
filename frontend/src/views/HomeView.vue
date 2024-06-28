@@ -372,8 +372,15 @@ const handleKeyPress = async (event) => {
     // 检查是否按下了 Ctrl+S （keyCode为83，同时按下Ctrl键）
     if (event.keyCode === 83 && (event.ctrlKey || event.metaKey)) {
         event.preventDefault()
-        if (reactiveFile.value.closeType !== 'unSave') return // 没有修改的不保存
-        if (currentSelectd.value.author !== username.value) return // 只能保存自己的文件
+        if (currentSelectd.value.author !== username.value && username.value !== 'admin') {
+            ElNotification({
+                title: '无法保存',
+                message: '不能修改他人的算法库哦~',
+                type: 'info'
+            })
+            return
+        } // 只能保存自己的文件
+        if (reactiveFile.value.closeType !== 'unSave' && username.value !== 'admin') return // 没有修改的不保存
         const algoForm = reactive({
             id: currentSelectd.value.id,
             title: currentSelectd.value.title,
@@ -392,6 +399,7 @@ const handleKeyPress = async (event) => {
                 message: '算法库编辑成功',
                 type: 'success'
             })
+            await reflesh()            
         } else {
             ElNotification({
                 title: '保存出错啦',
