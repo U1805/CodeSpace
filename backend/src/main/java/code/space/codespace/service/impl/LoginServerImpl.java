@@ -106,7 +106,7 @@ public class LoginServerImpl implements LoginServer {
                     "https://avatars.githubusercontent.com/u/93321955",
                     "https://avatars.githubusercontent.com/u/141130496",
                     "https://avatars.githubusercontent.com/u/149292952",
-                    "https://avatars.githubusercontent.com/u/33820902",
+//                    "https://avatars.githubusercontent.com/u/33820902",
                     "https://avatars.githubusercontent.com/u/68903738",
                     "https://avatars.githubusercontent.com/u/150766762"
             };

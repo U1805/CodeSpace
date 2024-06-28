@@ -69,6 +69,7 @@ public class AlgoSeverImpl implements AlgoServer{
 
             // Calculate and update user score
             int score = (int) (10 + uploadInfo.getLine() * weight.getOrDefault(uploadInfo.getLanguage(), 1.0));
+            if (!uploadInfo.getOrigin()) score = (int)((score-10)*0.5);
             userMapper.updateScore(uploadInfo.getAuthor(), score);
 
             return score;
@@ -80,6 +81,7 @@ public class AlgoSeverImpl implements AlgoServer{
         Algorithm[] algo = algoMapper.searchById(id);
         if (algo.length == 0) return false;
         int score = (int) (10 + algo[0].getLine() * weight.getOrDefault(algo[0].getLanguage(), 1.0));
+        if (!algo[0].getOrigin()) score = (int)((score-10)*0.5);
         userMapper.updateScore(algo[0].getAuthor(), -score);
         algoMapper.delete(id);
         return true;

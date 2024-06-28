@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Algo, Result, User } from './interface'
 
 const axios_ins = axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: 'http://39.107.247.138:8080',
     timeout: 60000
 })
 
